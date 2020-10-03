@@ -1,5 +1,8 @@
 package com.i19097842.curtin.edu.au.mad_assignment2.models
 
+/**
+ * Simple classes to represent structures that are placeable on the map
+ */
 open class Structure(val drawable: Int, val name: String)
 
 class Residential(drawable: Int) : Structure(drawable = drawable, name = "Residential")
@@ -8,3 +11,4 @@ class Commercial(drawable: Int) : Structure(drawable = drawable, name = "Commerc
 
 class Road(drawable: Int) : Structure(drawable = drawable, name = "Road")
 
+class Tree(drawable: Int) : Structure(drawable = drawable, name= "Tree")

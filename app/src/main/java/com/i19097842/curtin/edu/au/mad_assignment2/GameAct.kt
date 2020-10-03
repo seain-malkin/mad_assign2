@@ -5,6 +5,7 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.i19097842.curtin.edu.au.mad_assignment2.models.Residential
+import com.i19097842.curtin.edu.au.mad_assignment2.models.StructureData
 
 /**
  * Game Activity: This is the games core activity. Content is displayed across four fragments
