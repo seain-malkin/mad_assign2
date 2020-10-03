@@ -1,6 +1,7 @@
 package com.i19097842.curtin.edu.au.mad_assignment2.lib;
 
 import com.i19097842.curtin.edu.au.mad_assignment2.R;
+import com.i19097842.curtin.edu.au.mad_assignment2.models.MapElement;
 
 import java.util.Random;
 
@@ -111,12 +112,13 @@ public class MapData
                             R.drawable.ic_coast_southwest, R.drawable.ic_coast_southwest_concave),
                         choose(waterS, waterE, waterSE,
                             R.drawable.ic_coast_south, R.drawable.ic_coast_east,
-                            R.drawable.ic_coast_southeast, R.drawable.ic_coast_southeast_concave));
+                            R.drawable.ic_coast_southeast, R.drawable.ic_coast_southeast_concave),
+                            null);
                 }
                 else
                 {
                     grid[i][j] = new MapElement(
-                        false, WATER, WATER, WATER, WATER);
+                        false, WATER, WATER, WATER, WATER, null);
                 }
             }
         }
