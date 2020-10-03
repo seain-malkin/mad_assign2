@@ -82,8 +82,6 @@ public class MapData
         {
             for(int j = 0; j < WIDTH; j++)
             {
-                MapElement element;
-
                 if(heightField[i][j] >= WATER_LEVEL)
                 {
                     boolean waterN = (i == 0)          || (heightField[i - 1][j] < WATER_LEVEL);
