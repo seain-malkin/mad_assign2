@@ -1,7 +1,7 @@
 package com.i19097842.curtin.edu.au.mad_assignment2.lib;
 
 import com.i19097842.curtin.edu.au.mad_assignment2.R;
-import com.i19097842.curtin.edu.au.mad_assignment2.models.MapElement;
+import com.i19097842.curtin.edu.au.mad_assignment2.models.GameMap.MapElement;
 
 import java.util.Random;
 
