@@ -1,5 +1,8 @@
 package com.i19097842.curtin.edu.au.mad_assignment2.models
 
+/**
+ * Settings of the game in play with default values. Persistent settings will overwrite.
+ */
 class Settings {
     var mapWidth = 50
     var mapHeight = 10
