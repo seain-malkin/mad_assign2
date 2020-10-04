@@ -1,5 +1,6 @@
 package com.i19097842.curtin.edu.au.mad_assignment2.fragments
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -13,6 +14,7 @@ import com.i19097842.curtin.edu.au.mad_assignment2.R
 import com.i19097842.curtin.edu.au.mad_assignment2.models.GameData
 import com.i19097842.curtin.edu.au.mad_assignment2.models.GameMap
 import com.i19097842.curtin.edu.au.mad_assignment2.models.Structure
+import java.lang.RuntimeException
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -25,11 +27,41 @@ private const val ARG_PARAM2 = "param2"
  * create an instance of this fragment.
  */
 class MapFrag : Fragment() {
+    /**
+     * Listener for fragment->activity communication. Caller context must implement interface.
+     */
+    interface MapListener {}
+
+    /**
+     * @property[listener] Reference to the context caller.
+     */
+    private var listener: MapListener? = null
+
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
 
+    /**
+     * @property[mapAdapter] The [RecyclerView.Adapter] for the grid views
+     */
     val mapAdapter = MapAdapter(GameData.get.map)
+
+    /**
+     * Enforces caller context implements [MapListener] interface
+     * @see Fragment.onAttach
+     */
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+
+        // Save reference to context or throw exception if interface not implemented
+        if (context is MapListener) {
+            listener = context
+        }
+        else {
+            throw RuntimeException(context.toString() +
+                    " must implement the MapListener interface.")
+        }
+    }
 
     /**
      * @see Fragment.onCreate

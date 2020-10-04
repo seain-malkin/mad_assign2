@@ -19,7 +19,7 @@ import com.i19097842.curtin.edu.au.mad_assignment2.fragments.ToolsFrag
  *
  * @author Seain Malkin (19097842@student.curtin.edu.au)
  */
-class GameAct : AppCompatActivity() {
+class GameAct : MapFrag.MapListener, AppCompatActivity() {
     /**
      * Injects the fragments into the main view and reinstates any saved state data
      * @see [AppCompatActivity.onCreate]
