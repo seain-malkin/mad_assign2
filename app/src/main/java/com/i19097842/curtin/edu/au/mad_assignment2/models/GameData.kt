@@ -22,8 +22,8 @@ class GameData private constructor() {
 
     companion object {
         /**
-         * @property[instance] Singleton object reference
+         * @property[get] Singleton object reference
          */
-        val instance = GameData()
+        val get = GameData()
     }
 }
