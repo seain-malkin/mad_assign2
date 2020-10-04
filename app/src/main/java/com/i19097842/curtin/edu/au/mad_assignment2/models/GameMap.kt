@@ -6,21 +6,13 @@ import com.i19097842.curtin.edu.au.mad_assignment2.lib.MapData
  * Represents the map that the user can build structures upon
  * @author Seain Malkin (19097842@student.curtin.edu.au)
  *
- * @property[height] The map height
- * @property[width] The map width
+ * @property[grid] A two-dimensional array representing an (x,y) co-ordinate
  */
 class GameMap(
-    val height: Int,
-    val width: Int
+    val grid: Array<out Array<MapElement>>
 ) {
-    /**
-     * @property[grid] A two-dimensional array representing an (x,y) co-ordinate
-     */
-    private val grid = MapData.generateGrid(height, width)
-
-    /**
-     * @property[area] The total number of grid elements in the map
-     */
+    val height = grid.size
+    val width = grid[0].size
     val area = height * width
 
     /**
