@@ -37,7 +37,7 @@ class GameMap(
      * @param[position] The one-dimensional index of the two-dimensional grid
      */
     fun get(position: Int): MapElement {
-        return get(position % HEIGHT, position / HEIGHT)
+        return get(position % height, position / height)
     }
 
     /**
