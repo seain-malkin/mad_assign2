@@ -56,8 +56,8 @@ class GameMap(
         val buildable: Boolean,
         val nw: Int,
         val ne: Int,
-        val se: Int,
         val sw: Int,
+        val se: Int,
         var structure: Structure? = null
     )
 }

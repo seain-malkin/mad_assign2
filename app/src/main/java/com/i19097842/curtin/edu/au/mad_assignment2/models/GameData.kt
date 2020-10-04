@@ -1,8 +1,8 @@
 package com.i19097842.curtin.edu.au.mad_assignment2.models
 
 //TODO: Replace with settings object
-const val HEIGHT= 10
-const val WIDTH = 10
+const val HEIGHT = 10
+const val WIDTH = 30
 
 
 /**
