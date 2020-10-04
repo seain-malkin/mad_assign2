@@ -1,10 +1,11 @@
-package com.i19097842.curtin.edu.au.mad_assignment2
+package com.i19097842.curtin.edu.au.mad_assignment2.fragments
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.i19097842.curtin.edu.au.mad_assignment2.R
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
