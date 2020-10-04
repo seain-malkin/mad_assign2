@@ -42,7 +42,6 @@ class GameMap(
      * @property[ne] North east
      * @property[se] South east
      * @property[sw] South west
-     *
      * @property[structure] The [Structure] to place on top of the grid
      */
     class MapElement(
