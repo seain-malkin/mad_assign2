@@ -14,6 +14,8 @@ const val WIDTH = 30
  * database for persistence.
  *
  * @author Seain Malkin (19097842@student.curtin.edu.au)
+ *
+ * https://stackoverflow.com/questions/54075649/access-application-context-in-companion-object-in-kotlin
  */
 class GameData private constructor() {
     /** @property[GameData.map] The map object */
