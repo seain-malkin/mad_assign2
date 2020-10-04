@@ -10,7 +10,7 @@ import com.i19097842.curtin.edu.au.mad_assignment2.fragments.StructListFrag
 import com.i19097842.curtin.edu.au.mad_assignment2.fragments.ToolsFrag
 
 /**
- * Game Activity: This is the games core activity. Content is displayed across four fragments
+ * GameData.kt Activity: This is the games core activity. Content is displayed across four fragments
  * as listed:
  * 1. Tools: A toolbar with various actions
  * 2. Map: Displays the game map

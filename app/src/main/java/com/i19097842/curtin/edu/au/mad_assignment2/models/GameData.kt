@@ -17,7 +17,7 @@ const val WIDTH = 30
  *
  * https://stackoverflow.com/questions/54075649/access-application-context-in-companion-object-in-kotlin
  */
-class GameData private constructor() {
+class GameData {
     /** @property[GameData.map] The map object */
     val map: GameMap
 
