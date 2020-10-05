@@ -25,6 +25,8 @@ private const val ARG_PARAM2 = "param2"
  * Displays the game map and handles user interactions and communication with the main activity
  * Use the [MapFrag.newInstance] factory method to
  * create an instance of this fragment.
+ *
+ * https://guides.codepath.com/android/Handling-Configuration-Changes#recyclerview
  */
 class MapFrag : Fragment() {
     /**
