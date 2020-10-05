@@ -11,7 +11,7 @@ import android.widget.ImageView
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.i19097842.curtin.edu.au.mad_assignment2.R
-import com.i19097842.curtin.edu.au.mad_assignment2.models.GameData
+import com.i19097842.curtin.edu.au.mad_assignment2.models.Game
 import com.i19097842.curtin.edu.au.mad_assignment2.models.GameMap
 import com.i19097842.curtin.edu.au.mad_assignment2.models.Structure
 import java.lang.RuntimeException
@@ -44,7 +44,7 @@ class MapFrag : Fragment() {
     /**
      * @property[mapAdapter] The [RecyclerView.Adapter] for the grid views
      */
-    val mapAdapter = MapAdapter(GameData.get.map)
+    val mapAdapter = MapAdapter(Game.get.map)
 
     /**
      * Enforces caller context implements [MapListener] interface
@@ -88,7 +88,7 @@ class MapFrag : Fragment() {
         view.findViewById<RecyclerView>(R.id.mapRV).let {
             it.layoutManager = GridLayoutManager(
                 activity,
-                GameData.get.map.height,
+                Game.get.map.height,
                 GridLayoutManager.HORIZONTAL,
                 false
             )
@@ -166,7 +166,7 @@ class MapFrag : Fragment() {
 
         init {
             // Dynamically change the views dimensions based on screen size
-            (parent.measuredHeight / GameData.get.map.height + 1).let { dim ->
+            (parent.measuredHeight / Game.get.map.height + 1).let { dim ->
                 itemView.layoutParams.let {
                     it.height = dim
                     it.width = dim

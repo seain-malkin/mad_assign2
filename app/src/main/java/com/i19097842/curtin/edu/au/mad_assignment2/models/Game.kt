@@ -12,18 +12,18 @@ import com.i19097842.curtin.edu.au.mad_assignment2.lib.MapData
  *
  * https://stackoverflow.com/questions/54075649/access-application-context-in-companion-object-in-kotlin
  */
-class GameData {
-    /** @property[GameData.map] The map object */
+class Game {
+    /** @property[Game.map] The map object */
     val map: GameMap
 
-    /** @property[GameData.settings] Default or persistant settings */
+    /** @property[Game.settings] Default or persistant settings */
     val settings: Settings
 
-    /** @property[GameData.money] Players overall cash */
+    /** @property[Game.money] Players overall cash */
     var money: Int = 0
         private set
 
-    /** @property[GameData.gameTime] Game ticks */
+    /** @property[Game.gameTime] Game ticks */
     var gameTime: Int = 0
         private set
 
@@ -34,6 +34,6 @@ class GameData {
 
     companion object {
         /** @property[get] Singleton object reference */
-        val get = GameData()
+        val get = Game()
     }
 }
