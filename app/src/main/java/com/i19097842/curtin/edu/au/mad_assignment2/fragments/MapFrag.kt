@@ -64,6 +64,15 @@ class MapFrag : Fragment() {
     }
 
     /**
+     * When fragment deleted, unset the context listener
+     * @see Fragment.onDetach
+     */
+    override fun onDetach() {
+        super.onDetach()
+        listener = null
+    }
+
+    /**
      * @see Fragment.onCreate
      */
     override fun onCreate(savedInstanceState: Bundle?) {
