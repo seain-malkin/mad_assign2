@@ -14,10 +14,10 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/gameFrameStructList"/>
+        app:layout_constraintBottom_toTopOf="@id/gameFrameStruct"/>
 
     <FrameLayout
-        android:id="@+id/gameFrameStructList"
+        android:id="@+id/gameFrameStruct"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
