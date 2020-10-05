@@ -7,15 +7,13 @@ import android.os.Bundle
 import com.i19097842.curtin.edu.au.mad_assignment2.fragments.MapFrag
 import com.i19097842.curtin.edu.au.mad_assignment2.fragments.MetaFrag
 import com.i19097842.curtin.edu.au.mad_assignment2.fragments.StructListFrag
-import com.i19097842.curtin.edu.au.mad_assignment2.fragments.ToolsFrag
 
 /**
  * GameData.kt Activity: This is the games core activity. Content is displayed across four fragments
  * as listed:
- * 1. Tools: A toolbar with various actions
- * 2. Map: Displays the game map
+ * 2. Map: Displays the game map (Embedded in XML)
  * 3. Structure List: A scrollable list of structures that can be built
- * 4. Meta: Ant overlay on the map that displays meta data and actions
+ * 4. Meta: Ant overlay on the map that displays meta data and actions (Embedded in XML)
  *
  * @author Seain Malkin (19097842@student.curtin.edu.au)
  */
@@ -31,21 +29,9 @@ class GameAct : MapFrag.MapListener, AppCompatActivity() {
         // Load fragments using the fragment manager
         supportFragmentManager.let { fm ->
             // Begin a transaction and add fragments if needed
-            fm.beginTransaction().run {
-                if (fm.findFragmentById(R.id.gameFrameTools) !is ToolsFrag) {
-                    add(R.id.gameFrameTools, ToolsFrag.newInstance())
-                }
-                if (fm.findFragmentById(R.id.gameFrameMap) !is MapFrag) {
-                    add(R.id.gameFrameMap, MapFrag.newInstance())
-                }
-                if (fm.findFragmentById(R.id.gameFrameStructList) !is StructListFrag) {
-                    add(R.id.gameFrameStructList, StructListFrag.newInstance())
-                }
-                if (fm.findFragmentById(R.id.gameFrameMeta) !is MetaFrag) {
-                    add(R.id.gameFrameMeta, MetaFrag.newInstance())
-                }
-                // Only commit transaction if something was added
-                if (!isEmpty) commit()
+            if (fm.findFragmentById(R.id.gameFrameStructList) !is StructListFrag) {
+                fm.beginTransaction()
+                    .add(R.id.gameFrameStructList, StructListFrag.newInstance()).commit()
             }
         }
     }
