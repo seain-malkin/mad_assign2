@@ -5,7 +5,13 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".fragments.StructSelectFrag">
+    tools:context=".fragments.StructSelectFrag"
+    android:orientation="vertical">
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/structSelectRV"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/structSelectMenu"
