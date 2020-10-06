@@ -57,7 +57,6 @@ class GameAct : MapFrag.MapListener, AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_game)
 
-        // Resume any previous state
         savedInstanceState?.let {
             structFragMode = savedInstanceState.getString(ARG_STRUCT_MODE, STRUCT_FRAG_SELECT)
         }
@@ -85,7 +84,7 @@ class GameAct : MapFrag.MapListener, AppCompatActivity() {
         // Create an instance if needed
         if (structSelectFrag == null) {
             supportFragmentManager.let { fm ->
-                fm.findFragmentById(R.id.gameFrameStruct).let {
+                fm.findFragmentByTag(STRUCT_FRAG_SELECT).let {
                     // Either reference the found fragment or create a new instance
                     structSelectFrag = when (it) {
                         is StructSelectFrag -> it
@@ -107,7 +106,7 @@ class GameAct : MapFrag.MapListener, AppCompatActivity() {
         // Create an instance if needed
         if (structListFrag == null) {
             supportFragmentManager.let { fm ->
-                fm.findFragmentById(R.id.gameFrameStruct).let {
+                fm.findFragmentByTag(STRUCT_FRAG_LIST).let {
                     // Either reference the found fragment or create a new instance
                     structListFrag = when (it) {
                         is StructListFrag -> it
@@ -131,7 +130,9 @@ class GameAct : MapFrag.MapListener, AppCompatActivity() {
                 on?.let { frag ->
                     when (frag.isAdded) {
                         true -> show(frag)
-                        false -> add(R.id.gameFrameStruct, frag)
+                        false -> add(R.id.gameFrameStruct, frag,
+                            if (structFragMode == STRUCT_FRAG_SELECT)
+                                STRUCT_FRAG_SELECT else STRUCT_FRAG_LIST)
                     }
                     off?.let { hide(it) }
                     commit()
