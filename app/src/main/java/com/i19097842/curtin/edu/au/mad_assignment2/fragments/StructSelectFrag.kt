@@ -49,6 +49,7 @@ class StructSelectFrag : Fragment() {
             }
     }
 
+    /** @see [Fragment.onCreate] */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -57,6 +58,7 @@ class StructSelectFrag : Fragment() {
         }
     }
 
+    /** @see [Fragment.onCreateView] */
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -68,6 +70,10 @@ class StructSelectFrag : Fragment() {
         return view
     }
 
+    /**
+     * Sets up event listeners on the menu items
+     * @param[menu] Reference to the bottom menu
+     */
     private fun setupNavMenu(menu: BottomNavigationView) {
         menu.setOnNavigationItemSelectedListener { item ->
             when(item.itemId) {
@@ -89,35 +95,57 @@ class StructSelectFrag : Fragment() {
         }
     }
 
+    /**
+     * Sets up the [RecyclerView] list that displays the selectable structures
+     * @param[rv] Reference to the recycler view
+     */
     private fun setupList(rv: RecyclerView) {
         rv.layoutManager = LinearLayoutManager(activity, RecyclerView.HORIZONTAL, false)
         rv.adapter = StructAdapter(StructureData.get.residential)
     }
 
+    /**
+     * The [RecyclerView.Adapter] subclass that handles the views and data binding for the
+     * structure list
+     * @property[items] An array of items to display
+     */
     private inner class StructAdapter(
         var items: Array<Structure>
     ): RecyclerView.Adapter<StructListVH>() {
+        /** @see [RecyclerView.Adapter.onCreateViewHolder] */
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): StructListVH {
             return StructListVH(LayoutInflater.from(activity), parent)
         }
 
+        /** @see [RecyclerView.Adapter.onBindViewHolder] */
         override fun onBindViewHolder(holder: StructListVH, position: Int) {
             holder.bind(items[position])
         }
 
+        /** @see [RecyclerView.Adapter.getItemCount] */
         override fun getItemCount(): Int {
             return items.size
         }
     }
 
+    /**
+     * The [RecyclerView.ViewHolder] subclass used by the adapter to create each view
+     * @param[li] The inflater to use for the view
+     * @param[parent] The view group to attach the view to
+     */
     inner class StructListVH(
         li: LayoutInflater,
         parent: ViewGroup
     ): RecyclerView.ViewHolder(
         li.inflate(R.layout.struct_list, parent, false)
     ) {
+        /** Find view elements */
         private val image:ImageView = itemView.findViewById(R.id.structListImage)
 
+        /**
+         * Binds the data item to the view
+         * @param[item] The structure to bind
+         */
         fun bind(item: Structure) {
             image.setImageResource(item.drawable)
         }
