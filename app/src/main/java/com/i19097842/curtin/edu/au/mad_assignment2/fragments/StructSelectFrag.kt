@@ -28,6 +28,7 @@ class StructSelectFrag : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
+    private val adapter: StructAdapter = StructAdapter(StructureData.get.residential)
 
     companion object {
         /**
@@ -77,22 +78,26 @@ class StructSelectFrag : Fragment() {
     private fun setupNavMenu(menu: BottomNavigationView) {
         menu.setOnNavigationItemSelectedListener { item ->
             when(item.itemId) {
-                R.id.item_res -> Log.i("BottomNav", "Residential")
-                R.id.item_com -> Log.i("BottomNav", "Commercial")
-                else -> false
+                R.id.item_res -> updateAdapter(StructureData.get.residential)
+                R.id.item_com -> updateAdapter(StructureData.get.commercial)
+                R.id.item_road -> updateAdapter(StructureData.get.roads)
+                R.id.item_trees -> updateAdapter(StructureData.get.trees)
             }
 
             true
         }
-        menu.setOnNavigationItemReselectedListener { item ->
-            when(item.itemId) {
-                R.id.item_res -> Log.i("BottomNav", "Residential Reselect")
-                R.id.item_com -> Log.i("BottomNav", "Commercial Reselct")
-                else -> false
-            }
 
-            true
-        }
+        // Do nothing on menu item reselect
+        menu.setOnNavigationItemReselectedListener { _ -> false }
+    }
+
+    /**
+     * Allocates a new data set to the adapter and notifies listeners
+     * @param[items] The new data array
+     */
+    private fun updateAdapter(items: Array<Structure>) {
+        adapter.items = items
+        adapter.notifyDataSetChanged()
     }
 
     /**
@@ -101,7 +106,7 @@ class StructSelectFrag : Fragment() {
      */
     private fun setupList(rv: RecyclerView) {
         rv.layoutManager = LinearLayoutManager(activity, RecyclerView.HORIZONTAL, false)
-        rv.adapter = StructAdapter(StructureData.get.residential)
+        rv.adapter = adapter
     }
 
     /**
