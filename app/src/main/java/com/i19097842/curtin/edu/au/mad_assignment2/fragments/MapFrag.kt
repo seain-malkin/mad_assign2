@@ -32,7 +32,13 @@ class MapFrag : Fragment() {
     /**
      * Listener for fragment->activity communication. Caller context must implement interface.
      */
-    interface MapListener {}
+    interface MapListener {
+        /**
+         * Fired when the map receives a click event
+         * @param[element] The item representing the clicked element
+         */
+        fun onMapClick(element: GameMap.MapElement?)
+    }
 
     /**
      * @property[listener] Reference to the context caller.
@@ -175,6 +181,8 @@ class MapFrag : Fragment() {
         private val sw = itemView.findViewById<ImageView>(R.id.gridSW)
         private val struct = itemView.findViewById<ImageView>(R.id.gridStruct)
 
+        private var mapElement: GameMap.MapElement? = null
+
         init {
             // Dynamically change the views dimensions based on screen size
             (parent.measuredHeight / Game.get.map.height + 1).let { dim ->
@@ -184,8 +192,7 @@ class MapFrag : Fragment() {
                 }
             }
 
-            // Set click event on entire view element
-            itemView.setOnClickListener { Log.i("Grid CLick", "Yes") }
+            itemView.setOnClickListener { listener?.onMapClick(mapElement) }
         }
 
         /**
@@ -207,6 +214,8 @@ class MapFrag : Fragment() {
             else {
                 struct.setImageDrawable(null)
             }
+
+            mapElement = element
         }
     }
 }
