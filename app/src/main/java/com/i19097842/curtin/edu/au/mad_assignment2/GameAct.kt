@@ -6,9 +6,9 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import com.i19097842.curtin.edu.au.mad_assignment2.fragments.MapFrag
-import com.i19097842.curtin.edu.au.mad_assignment2.fragments.StructSelectFrag
+import com.i19097842.curtin.edu.au.mad_assignment2.fragments.StructFrag
 import com.i19097842.curtin.edu.au.mad_assignment2.models.GameMap
-
+import com.i19097842.curtin.edu.au.mad_assignment2.models.Structure
 
 
 /**
@@ -16,9 +16,7 @@ import com.i19097842.curtin.edu.au.mad_assignment2.models.GameMap
  *
  * @author Seain Malkin (19097842@student.curtin.edu.au)
  */
-class GameAct : MapFrag.MapListener, AppCompatActivity() {
-    /** @property[structSelectFrag] Instance of the structure select fragment */
-    private var structSelectFrag: StructSelectFrag? = null
+class GameAct : MapFrag.MapListener, StructFrag.StructListener, AppCompatActivity() {
 
     companion object {
         /**
@@ -41,7 +39,19 @@ class GameAct : MapFrag.MapListener, AppCompatActivity() {
         setContentView(R.layout.activity_game)
     }
 
+    /**
+     * Handle map click
+     * @see [MapFrag.MapListener.onMapClick]
+     */
     override fun onMapClick(element: GameMap.MapElement?) {
         Log.i("GameAct", "Map Click")
+    }
+
+    /**
+     * Handle structure selection
+     * @see [StructFrag.StructListener.onStructureSelected]
+     */
+    override fun onStructureSelected(structure: Structure) {
+        Log.i("Structure Clicked", structure.name)
     }
 }

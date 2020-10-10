@@ -1,5 +1,6 @@
 package com.i19097842.curtin.edu.au.mad_assignment2.fragments
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -13,6 +14,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.i19097842.curtin.edu.au.mad_assignment2.R
 import com.i19097842.curtin.edu.au.mad_assignment2.models.Structure
 import com.i19097842.curtin.edu.au.mad_assignment2.models.StructureData
+import java.lang.RuntimeException
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -24,11 +26,26 @@ private const val ARG_PARAM2 = "param2"
  * Use the [StructSelectFrag.newInstance] factory method to
  * create an instance of this fragment.
  */
-class StructSelectFrag : Fragment() {
+class StructFrag : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
+
+    /** Adapter for handling structure list displayed in [RecyclerView] */
     private val adapter: StructAdapter = StructAdapter(StructureData.get.residential)
+
+    /** Context listener */
+    private var listener: StructListener? = null
+
+    /** Interface for fragment->activity communication */
+    interface StructListener {
+        /**
+         * Fired when a structure is selected
+         * @param[structure] The selected structure
+         */
+        fun onStructureSelected(structure: Structure)
+    }
+
 
     companion object {
         /**
@@ -42,7 +59,7 @@ class StructSelectFrag : Fragment() {
         // TODO: Rename and change types and number of parameters
         @JvmStatic
         fun newInstance(param1: String = "", param2: String = "") =
-            StructSelectFrag().apply {
+            StructFrag().apply {
                 arguments = Bundle().apply {
                     putString(ARG_PARAM1, param1)
                     putString(ARG_PARAM2, param2)
@@ -57,6 +74,31 @@ class StructSelectFrag : Fragment() {
             param1 = it.getString(ARG_PARAM1)
             param2 = it.getString(ARG_PARAM2)
         }
+    }
+
+    /**
+     * Ensure calling activity implements StructListener
+     * @see [Fragment.onAttach]
+     */
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+
+        if (context is StructListener) {
+            listener = context
+        }
+        else {
+            throw RuntimeException(context.toString() +
+                    " must implement StructListener.")
+        }
+    }
+
+    /**
+     * Remove reference to listener to avoid memory leaks
+     * @see [Fragment.onDestroy]
+     */
+    override fun onDestroy() {
+        listener = null
+        super.onDestroy()
     }
 
     /** @see [Fragment.onCreateView] */
@@ -147,12 +189,21 @@ class StructSelectFrag : Fragment() {
         /** Find view elements */
         private val image:ImageView = itemView.findViewById(R.id.structListImage)
 
+        /** Structure item being bound */
+        private var item: Structure? = null
+
+        /** Setup view click event */
+        init {
+            itemView.setOnClickListener { listener?.onStructureSelected(item!!) }
+        }
+
         /**
          * Binds the data item to the view
          * @param[item] The structure to bind
          */
-        fun bind(item: Structure) {
-            image.setImageResource(item.drawable)
+        fun bind(structure: Structure) {
+            item = structure
+            image.setImageResource(structure.drawable)
         }
     }
 }

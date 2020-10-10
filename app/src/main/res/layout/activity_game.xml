@@ -18,7 +18,7 @@
 
     <fragment
         android:id="@+id/gameFrameStruct"
-        android:name="com.i19097842.curtin.edu.au.mad_assignment2.fragments.StructSelectFrag"
+        android:name="com.i19097842.curtin.edu.au.mad_assignment2.fragments.StructFrag"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
