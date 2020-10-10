@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import com.i19097842.curtin.edu.au.mad_assignment2.fragments.MapFrag
+import com.i19097842.curtin.edu.au.mad_assignment2.fragments.MetaFrag
 import com.i19097842.curtin.edu.au.mad_assignment2.fragments.StructFrag
 import com.i19097842.curtin.edu.au.mad_assignment2.models.GameMap
 import com.i19097842.curtin.edu.au.mad_assignment2.models.Structure
@@ -20,6 +21,7 @@ import java.text.FieldPosition
 class GameAct : MapFrag.MapListener, StructFrag.StructListener, AppCompatActivity() {
 
     private var mapFrag: MapFrag? = null
+    private var metaFrag: MetaFrag? = null
     private var selectedStruct: Structure? = null
 
     companion object {
@@ -42,10 +44,18 @@ class GameAct : MapFrag.MapListener, StructFrag.StructListener, AppCompatActivit
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_game)
 
-        // attach the map fragment
+        // attach the map and meta fragments
         if (savedInstanceState == null) {
-            mapFrag = MapFrag.newInstance().also {
-                supportFragmentManager.beginTransaction().add(R.id.gameFrameMap, it).commit()
+            supportFragmentManager.let { fm ->
+                fm.beginTransaction().run {
+                    mapFrag = MapFrag.newInstance().also {
+                        add(R.id.gameFrameMap, it)
+                    }
+                    metaFrag = MetaFrag.newInstance().also {
+                        add(R.id.gameFrameMeta, it)
+                    }
+                    commit()
+                }
             }
         }
     }
@@ -69,5 +79,6 @@ class GameAct : MapFrag.MapListener, StructFrag.StructListener, AppCompatActivit
      */
     override fun onStructureSelected(structure: Structure) {
         selectedStruct = structure
+        metaFrag?.updateSelectedStructure(structure)
     }
 }
