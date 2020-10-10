@@ -9,6 +9,7 @@ import com.i19097842.curtin.edu.au.mad_assignment2.fragments.MapFrag
 import com.i19097842.curtin.edu.au.mad_assignment2.fragments.StructFrag
 import com.i19097842.curtin.edu.au.mad_assignment2.models.GameMap
 import com.i19097842.curtin.edu.au.mad_assignment2.models.Structure
+import java.text.FieldPosition
 
 
 /**
@@ -17,6 +18,9 @@ import com.i19097842.curtin.edu.au.mad_assignment2.models.Structure
  * @author Seain Malkin (19097842@student.curtin.edu.au)
  */
 class GameAct : MapFrag.MapListener, StructFrag.StructListener, AppCompatActivity() {
+
+    private var mapFrag: MapFrag? = null
+    private var selectedStruct: Structure? = null
 
     companion object {
         /**
@@ -37,14 +41,26 @@ class GameAct : MapFrag.MapListener, StructFrag.StructListener, AppCompatActivit
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_game)
+
+        // attach the map fragment
+        if (savedInstanceState == null) {
+            mapFrag = MapFrag.newInstance().also {
+                supportFragmentManager.beginTransaction().add(R.id.gameFrameMap, it).commit()
+            }
+        }
     }
 
     /**
      * Handle map click
      * @see [MapFrag.MapListener.onMapClick]
      */
-    override fun onMapClick(element: GameMap.MapElement?) {
-        Log.i("GameAct", "Map Click")
+    override fun onMapClick(element: GameMap.MapElement, position: Int) {
+        selectedStruct?.let {
+            if (element.buildable && element.structure == null) {
+                element.structure = selectedStruct
+                mapFrag?.adapter?.notifyItemChanged(position)
+            }
+        }
     }
 
     /**
@@ -52,6 +68,6 @@ class GameAct : MapFrag.MapListener, StructFrag.StructListener, AppCompatActivit
      * @see [StructFrag.StructListener.onStructureSelected]
      */
     override fun onStructureSelected(structure: Structure) {
-        Log.i("Structure Clicked", structure.name)
+        selectedStruct = structure
     }
 }

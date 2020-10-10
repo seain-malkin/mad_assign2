@@ -94,11 +94,11 @@ class StructFrag : Fragment() {
 
     /**
      * Remove reference to listener to avoid memory leaks
-     * @see [Fragment.onDestroy]
+     * @see [Fragment.onDetach]
      */
-    override fun onDestroy() {
+    override fun onDetach() {
         listener = null
-        super.onDestroy()
+        super.onDetach()
     }
 
     /** @see [Fragment.onCreateView] */

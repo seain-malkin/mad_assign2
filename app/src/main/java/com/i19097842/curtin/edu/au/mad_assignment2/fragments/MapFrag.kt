@@ -36,8 +36,9 @@ class MapFrag : Fragment() {
         /**
          * Fired when the map receives a click event
          * @param[element] The item representing the clicked element
+         * @param[position] The elements position on the map
          */
-        fun onMapClick(element: GameMap.MapElement?)
+        fun onMapClick(element: GameMap.MapElement, position: Int)
     }
 
     /**
@@ -52,7 +53,7 @@ class MapFrag : Fragment() {
     /**
      * @property[mapAdapter] The [RecyclerView.Adapter] for the grid views
      */
-    val mapAdapter = MapAdapter(Game.get.map)
+    val adapter = MapAdapter(Game.get.map)
 
     /**
      * Enforces caller context implements [MapListener] interface
@@ -109,7 +110,7 @@ class MapFrag : Fragment() {
                 GridLayoutManager.HORIZONTAL,
                 false
             )
-            it.adapter = mapAdapter
+            it.adapter = adapter
         }
 
         return view
@@ -153,7 +154,7 @@ class MapFrag : Fragment() {
          * @see RecyclerView.Adapter.onBindViewHolder
          */
         override fun onBindViewHolder(holder: GridVH, position: Int) {
-            holder.bind(map.get(position))
+            holder.bind(map.get(position), position)
         }
 
         /**
@@ -182,6 +183,7 @@ class MapFrag : Fragment() {
         private val struct = itemView.findViewById<ImageView>(R.id.gridStruct)
 
         private var mapElement: GameMap.MapElement? = null
+        private var position: Int? = null
 
         init {
             // Dynamically change the views dimensions based on screen size
@@ -192,14 +194,14 @@ class MapFrag : Fragment() {
                 }
             }
 
-            itemView.setOnClickListener { listener?.onMapClick(mapElement) }
+            itemView.setOnClickListener { listener?.onMapClick(mapElement!!, position!!) }
         }
 
         /**
          * Binds the [GameMap.MapElement] data to the view elements
          * @param[element] The element being displayed in this view
          */
-        fun bind(element: GameMap.MapElement) {
+        fun bind(element: GameMap.MapElement, index: Int) {
             // Set the drawable for each grid
             nw.setImageResource(element.nw)
             ne.setImageResource(element.ne)
@@ -216,6 +218,7 @@ class MapFrag : Fragment() {
             }
 
             mapElement = element
+            position = index
         }
     }
 }
