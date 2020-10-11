@@ -11,19 +11,19 @@ import com.i19097842.curtin.edu.au.mad_assignment2.fragments.StructFrag
 import com.i19097842.curtin.edu.au.mad_assignment2.models.Game
 import com.i19097842.curtin.edu.au.mad_assignment2.models.GameMap
 import com.i19097842.curtin.edu.au.mad_assignment2.models.Structure
-import java.text.FieldPosition
-
 
 /**
  * GameData.kt Activity: This is the games core activity.
  *
  * @author Seain Malkin (19097842@student.curtin.edu.au)
  */
-class GameAct : MapFrag.MapListener, StructFrag.StructListener, AppCompatActivity() {
+class GameAct : MapFrag.MapListener, StructFrag.StructListener, MetaFrag.MetaListener,
+    AppCompatActivity() {
 
     private var mapFrag: MapFrag? = null
     private var metaFrag: MetaFrag? = null
     private var selectedStruct: Structure? = null
+    private var editMode: Game.EditMode = Game.EditMode.BUILD
 
     companion object {
         /**
@@ -66,12 +66,15 @@ class GameAct : MapFrag.MapListener, StructFrag.StructListener, AppCompatActivit
      * @see [MapFrag.MapListener.onMapClick]
      */
     override fun onMapClick(element: GameMap.MapElement, position: Int) {
-        // If a structure is selected then attempt to place it
-        selectedStruct?.let {
-            if (Game.get.putStructure(it, position)) {
-                mapFrag?.adapter?.notifyItemChanged(position)
-            }
+        var updated = false
+
+        updated = when (editMode) {
+            Game.EditMode.BUILD -> selectedStruct != null && Game.get.putStructure(selectedStruct!!, position)
+            Game.EditMode.DETAILS -> false
+            Game.EditMode.DELETE -> Game.get.deleteStructure(position)
         }
+
+        if (updated) mapFrag?.adapter?.notifyItemChanged(position)
     }
 
     /**
@@ -81,5 +84,9 @@ class GameAct : MapFrag.MapListener, StructFrag.StructListener, AppCompatActivit
     override fun onStructureSelected(structure: Structure) {
         selectedStruct = structure
         metaFrag?.updateSelectedStructure(structure)
+    }
+
+    override fun onEditModeChange(mode: Game.EditMode) {
+        editMode = mode
     }
 }

@@ -1,15 +1,20 @@
 package com.i19097842.curtin.edu.au.mad_assignment2.fragments
 
+import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.LinearLayout
 import androidx.cardview.widget.CardView
 import androidx.core.view.isVisible
 import com.i19097842.curtin.edu.au.mad_assignment2.R
+import com.i19097842.curtin.edu.au.mad_assignment2.models.Game
 import com.i19097842.curtin.edu.au.mad_assignment2.models.Structure
+import java.lang.RuntimeException
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -26,8 +31,34 @@ class MetaFrag : Fragment() {
     private var param1: String? = null
     private var param2: String? = null
 
+    /**
+     * Interface to enable fragment->activity communication
+     */
+    interface MetaListener {
+        /**
+         * Triggered when user changes the edit mode
+         * @param[mode] The new mode to apply
+         */
+        fun onEditModeChange(mode: Game.EditMode)
+    }
+
+    /** Reference to context caller */
+    private var listener: MetaListener? = null
+
+    /** References to view elements */
     private var selStructImg: ImageView? = null
     private var selStructCard: CardView? = null
+    private var delStructImg: ImageView? = null
+    private var delStructCard: CardView? = null
+    private var detStructImg: ImageView? = null
+    private var detStructCard: CardView? = null
+    private var modeLayout: LinearLayout? = null
+
+    /**
+     * The dimensions of the mode change buttons. Calculated at runtime.
+     */
+    private var modeImgLarge: Int = 0
+    private var modeImgSmall: Int = 0
 
     companion object {
         /**
@@ -49,6 +80,7 @@ class MetaFrag : Fragment() {
             }
     }
 
+    /** @see [Fragment.onCreate] */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -57,24 +89,110 @@ class MetaFrag : Fragment() {
         }
     }
 
+    /** @see [Fragment.onCreateView] */
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_meta, container, false)
-        selStructImg = view.findViewById(R.id.selectedStructure)
-        selStructCard = view.findViewById(R.id.selectedStructureCard)
+
+        // Find view elements
+        selStructImg = view.findViewById(R.id.selStructureImg)
+        selStructCard = view.findViewById(R.id.selStructureCard)
+        delStructImg = view.findViewById(R.id.delStructureImg)
+        delStructCard = view.findViewById(R.id.delStructureCard)
+        detStructImg = view.findViewById(R.id.detStructureImg)
+        detStructCard = view.findViewById(R.id.detStructureCard)
+
+        // Get the mode image sizes
+        selStructImg?.layoutParams?.let {
+            modeImgLarge = it.height
+        }
+        delStructImg?.layoutParams?.let {
+            modeImgSmall = it.height
+        }
+
+        // Attach user events to card elements
+        selStructCard?.setOnClickListener { updateEditMode(Game.EditMode.BUILD) }
+        delStructCard?.setOnClickListener { updateEditMode(Game.EditMode.DELETE) }
+        detStructCard?.setOnClickListener { updateEditMode(Game.EditMode.DETAILS) }
 
         return view
     }
 
+    /**
+     * Updates the view elements to represent the new mode and notifies any listeners
+     * @param[mode] The new mode to apply
+     */
+    fun updateEditMode(mode: Game.EditMode) {
+        // Reference the card img to focus
+        val img = when(mode) {
+            Game.EditMode.BUILD -> selStructImg
+            Game.EditMode.DELETE -> delStructImg
+            Game.EditMode.DETAILS -> detStructImg
+        }
+
+        // Enlarge the referenced card image
+        changeElementSize(img!!, modeImgLarge)
+
+        // Reduce size of other card images
+        if (img != selStructImg) {
+            changeElementSize(selStructImg!!, modeImgSmall)
+        }
+        if (img != delStructImg) {
+            changeElementSize(delStructImg!!, modeImgSmall)
+        }
+        if (img != detStructImg) {
+            changeElementSize(detStructImg!!, modeImgSmall)
+        }
+
+        listener?.onEditModeChange(mode)
+    }
+
+    private fun changeElementSize(element: View, size: Int) {
+        element.layoutParams.height = size
+        element.layoutParams.width = size
+        element.requestLayout()
+    }
+
+
+    /**
+     * Changes the drawable associated with the selected structure
+     * @param[structure] The structure that is selected for placement on map
+     */
     fun updateSelectedStructure(structure: Structure) {
         selStructImg?.setImageResource(structure.drawable)
+
         selStructCard?.let {
-            if (it.visibility == View.INVISIBLE) {
+            if (it.visibility == View.GONE) {
                 it.visibility = View.VISIBLE
             }
         }
+    }
+
+    /**
+     * Ensure caller implements interface
+     * @see [Fragment.onAttach]
+     */
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+
+        if (context is MetaListener) {
+            listener = context
+        }
+        else {
+            throw RuntimeException(context.toString() +
+                    " must implement MetaListener")
+        }
+    }
+
+    /**
+     * Remove context listener reference to avoid memory leaks
+     * @see [Fragment.onDetach]
+     */
+    override fun onDetach() {
+        listener = null
+        super.onDetach()
     }
 }

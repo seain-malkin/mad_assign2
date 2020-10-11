@@ -2,7 +2,7 @@ package com.i19097842.curtin.edu.au.mad_assignment2.models
 
 import android.util.Log
 import com.i19097842.curtin.edu.au.mad_assignment2.lib.MapData
-import com.i19097842.curtin.edu.au.mad_assignment2.models.GameMap.MapElement
+import java.lang.RuntimeException
 
 /**
  * Represents the current game been played. Implemented as a Singleton as only one game can be
@@ -39,6 +39,78 @@ class Game {
     }
 
     /**
+     * Attempts to delete a structure from the map
+     * @param[position] The position of the structure on the map
+     */
+    fun deleteStructure(position: Int) : Boolean {
+        val element = map.get(position)
+        var deleted = false
+
+        if (element.structure is Road && canDeleteRoad(position)) {
+            deleted = true
+        }
+        else if (element.structure !is Road) {
+            element.structure = null
+            deleted = true
+        }
+
+        return deleted
+    }
+
+    /**
+     * Checks if any buildings rely on a road at the given position
+     * @param[position] THe position on the map
+     */
+    fun canDeleteRoad(position: Int) : Boolean {
+        return canDeleteRoad(position / map.height, position % map.height)
+    }
+
+    /**
+     * Checks if any buildings rely on a road at the given coordinates
+     * @param[x] The x coordinate on the map
+     * @param[y] The y coordinate on the map
+     */
+    fun canDeleteRoad(x: Int, y: Int) : Boolean {
+        var safeDelete = true
+        val element = map.get(x, y)
+
+        if (element.structure is Road) {
+            // Save a temporary copy of the structure incase undo required
+            val road: Road = element.structure as Road
+
+            // Delete the road then check if adjacent buildings are still supported by another road
+            element.structure = null
+
+            // North and South (Y axis) - Step by 2 to skip the element being deleted
+            for (i in (y-1)..(y+1) step 2) {
+                if (map.get(x, i).structure is Building) {
+                    safeDelete = adjacentToRoad(x, i)
+                }
+                if (!safeDelete) break
+            }
+            // West and East (X axis)
+            if (safeDelete) {
+                for (i in (x-1)..(x+1) step 2) {
+                    if (map.get(i, y).structure is Building) {
+                        safeDelete = adjacentToRoad(i, y)
+                    }
+                    if (!safeDelete) break
+                }
+            }
+
+            // If can't delete safely then revert the structure removal
+            if (!safeDelete) {
+                element.structure = road
+            }
+        }
+        else {
+            throw RuntimeException("Error deleting road as structure is not of type Road.")
+        }
+
+        return safeDelete
+    }
+
+    /**
      * Attempts to place a structure on the map. Returns true if successful
      * @param[structure] The structure to place
      * @param[position] The map position to place the structure
@@ -66,11 +138,10 @@ class Game {
 
     /**
      * Checks if a road is adjacent to a map position. Either North, east, south or west
-     * @param[position] The map position to check adjacency
+     * @param[x] The x coordinate on the map
+     * @param[y] The y coordinate on the map
      */
-    fun adjacentToRoad(position: Int) : Boolean {
-        val x = position / map.height
-        val y = position % map.height
+    fun adjacentToRoad(x: Int, y: Int) : Boolean {
         var isAdjacent: Boolean = false
 
         // North and South (Y axis) - Step by 2 to skip the element being placed on to
@@ -87,5 +158,20 @@ class Game {
         }
 
         return isAdjacent
+    }
+
+    /**
+     * Checks if a road is adjacent to a map position. Either North, east, south or west
+     * @param[position] The map position to check adjacency
+     */
+    fun adjacentToRoad(position: Int) : Boolean {
+        return adjacentToRoad(position / map.height, position % map.height)
+    }
+
+    /**
+     * Enumerator class to identify action mode when interacting with map
+     */
+    enum class EditMode {
+        BUILD, DELETE, DETAILS
     }
 }
