@@ -8,6 +8,7 @@ import android.util.Log
 import com.i19097842.curtin.edu.au.mad_assignment2.fragments.MapFrag
 import com.i19097842.curtin.edu.au.mad_assignment2.fragments.MetaFrag
 import com.i19097842.curtin.edu.au.mad_assignment2.fragments.StructFrag
+import com.i19097842.curtin.edu.au.mad_assignment2.models.Game
 import com.i19097842.curtin.edu.au.mad_assignment2.models.GameMap
 import com.i19097842.curtin.edu.au.mad_assignment2.models.Structure
 import java.text.FieldPosition
@@ -65,11 +66,8 @@ class GameAct : MapFrag.MapListener, StructFrag.StructListener, AppCompatActivit
      * @see [MapFrag.MapListener.onMapClick]
      */
     override fun onMapClick(element: GameMap.MapElement, position: Int) {
-        selectedStruct?.let {
-            if (element.buildable && element.structure == null) {
-                element.structure = selectedStruct
-                mapFrag?.adapter?.notifyItemChanged(position)
-            }
+        if (Game.get.putStructure(selectedStruct!!, position)) {
+            mapFrag?.adapter?.notifyItemChanged(position)
         }
     }
 

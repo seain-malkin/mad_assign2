@@ -1,5 +1,6 @@
 package com.i19097842.curtin.edu.au.mad_assignment2.models
 
+import android.util.Log
 import com.i19097842.curtin.edu.au.mad_assignment2.lib.MapData
 
 /**
@@ -15,13 +16,14 @@ class GameMap(
     val width = grid[0].size
     val area = height * width
 
+
     /**
      * Returns the [MapElement] at the given co-ordinate
      * @param[x] The x co-ordinate
      * @param[y] The y co-ordinate
      */
     fun get(x: Int, y: Int): MapElement {
-        return grid[x][y]
+        return grid[y][x]
     }
 
     /**
@@ -29,7 +31,7 @@ class GameMap(
      * @param[position] The one-dimensional index of the two-dimensional grid
      */
     fun get(position: Int): MapElement {
-        return get(position % height, position / height)
+        return get(position / height, position % height)
     }
 
     /**
