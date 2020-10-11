@@ -46,10 +46,10 @@ class Game {
         val element = map.get(position)
         var deleted = false
 
-        if (element.structure is Road && canDeleteRoad(position)) {
-            deleted = true
+        if (element.structure is Road) {
+            deleted = deleteRoad(position)
         }
-        else if (element.structure !is Road) {
+        else {
             element.structure = null
             deleted = true
         }
@@ -61,8 +61,8 @@ class Game {
      * Checks if any buildings rely on a road at the given position
      * @param[position] THe position on the map
      */
-    fun canDeleteRoad(position: Int) : Boolean {
-        return canDeleteRoad(position / map.height, position % map.height)
+    fun deleteRoad(position: Int) : Boolean {
+        return deleteRoad(position / map.height, position % map.height)
     }
 
     /**
@@ -70,7 +70,7 @@ class Game {
      * @param[x] The x coordinate on the map
      * @param[y] The y coordinate on the map
      */
-    fun canDeleteRoad(x: Int, y: Int) : Boolean {
+    fun deleteRoad(x: Int, y: Int) : Boolean {
         var safeDelete = true
         val element = map.get(x, y)
 
