@@ -66,8 +66,11 @@ class GameAct : MapFrag.MapListener, StructFrag.StructListener, AppCompatActivit
      * @see [MapFrag.MapListener.onMapClick]
      */
     override fun onMapClick(element: GameMap.MapElement, position: Int) {
-        if (Game.get.putStructure(selectedStruct!!, position)) {
-            mapFrag?.adapter?.notifyItemChanged(position)
+        // If a structure is selected then attempt to place it
+        selectedStruct?.let {
+            if (Game.get.putStructure(it, position)) {
+                mapFrag?.adapter?.notifyItemChanged(position)
+            }
         }
     }
 
