@@ -86,6 +86,10 @@ class GameAct : MapFrag.MapListener, StructFrag.StructListener, MetaFrag.MetaLis
         metaFrag?.updateSelectedStructure(structure)
     }
 
+    /**
+     * Handle edit mode change by user
+     * @see [MetaFrag.MetaListener.onEditModeChange]
+     */
     override fun onEditModeChange(mode: Game.EditMode) {
         editMode = mode
     }

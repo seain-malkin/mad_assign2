@@ -31,6 +31,9 @@ class MetaFrag : Fragment() {
     private var param1: String? = null
     private var param2: String? = null
 
+    /** Current edit mode with default  */
+    private var editMode: Game.EditMode = Game.EditMode.BUILD
+
     /**
      * Interface to enable fragment->activity communication
      */
@@ -126,6 +129,8 @@ class MetaFrag : Fragment() {
      * @param[mode] The new mode to apply
      */
     fun updateEditMode(mode: Game.EditMode) {
+        editMode = mode
+
         // Reference the card img to focus
         val img = when(mode) {
             Game.EditMode.BUILD -> selStructImg
@@ -168,6 +173,11 @@ class MetaFrag : Fragment() {
             if (it.visibility == View.GONE) {
                 it.visibility = View.VISIBLE
             }
+        }
+
+        // Change to build mode if not already
+        if (editMode != Game.EditMode.BUILD) {
+            updateEditMode(Game.EditMode.BUILD)
         }
     }
 
