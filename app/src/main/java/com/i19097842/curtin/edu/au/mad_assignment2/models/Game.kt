@@ -29,6 +29,10 @@ class Game {
     var gameTime: Int = 0
         private set
 
+    var population: Int = 0
+        private set
+        get() {return settings.familySize * 10}
+
     init {
         map = GameMap(MapData.generateGrid(settings.mapHeight, settings.mapWidth))
     }
