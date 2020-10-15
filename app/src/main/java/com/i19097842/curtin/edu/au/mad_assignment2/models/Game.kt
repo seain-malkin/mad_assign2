@@ -34,6 +34,10 @@ class Game {
         get() {return settings.familySize * 10}
 
     init {
+        // TODO: Check if a database object exists and load game from that
+        // Otherwise create a new game and save to the database
+        money = settings.initialMoney
+
         map = GameMap(MapData.generateGrid(settings.mapHeight, settings.mapWidth))
     }
 
