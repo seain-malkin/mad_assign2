@@ -29,9 +29,18 @@ class Game {
     var gameTime: Int = 0
         private set
 
+    /** @property[Game.population] The number of people residing in the town */
     var population: Int = 0
         private set
         get() {return settings.familySize * 10}
+
+    /** @property[Game.nResidential] The number of residential structures */
+    var nResidential: Int = 0
+        private set
+
+    /** @property [Game.nCommercial] The number of commercial structures */
+    var nCommercial: Int = 0
+        private set
 
     init {
         // TODO: Check if a database object exists and load game from that
@@ -58,7 +67,13 @@ class Game {
             deleted = deleteRoad(position)
         }
         else {
+            when (element.structure) {
+                is Residential -> nResidential--
+                is Commercial -> nCommercial--
+                else -> {/** do nothing */}
+            }
             element.structure = null
+            // Update structure totals
             deleted = true
         }
 
@@ -132,6 +147,11 @@ class Game {
             // If building, ensure a road is adjacent
             if (structure is Building && adjacentToRoad(position)) {
                 element.structure = structure
+                // Update building totals
+                when (structure is Residential) {
+                    true -> nResidential++
+                    false -> nCommercial++
+                }
                 placed = true
             }
             // Otherwise if not building then place it
