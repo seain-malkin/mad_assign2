@@ -67,13 +67,14 @@ class Game {
             deleted = deleteRoad(position)
         }
         else {
+            // Update structure totals
             when (element.structure) {
                 is Residential -> nResidential--
                 is Commercial -> nCommercial--
                 else -> {/** do nothing */}
             }
+            // Delete structure reference
             element.structure = null
-            // Update structure totals
             deleted = true
         }
 
