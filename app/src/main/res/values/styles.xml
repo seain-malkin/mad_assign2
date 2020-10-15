@@ -16,4 +16,16 @@
         <item name="android:src">@android:color/transparent</item>
     </style>
 
+    <style name="formTitle" parent="TextAppearance.MaterialComponents.Headline3">
+        <item name="android:textColor">@color/colorOnSurfaceDarker</item>
+    </style>
+
+    <style name="formLabel" parent="TextAppearance.MaterialComponents.Headline5">
+        <item name="android:textColor">@color/colorOnSurfaceDark</item>
+    </style>
+
+    <style name="formActionCancel" parent="Widget.MaterialComponents.Button">
+        <item name="android:backgroundTint">@android:color/holo_red_light</item>
+    </style>
+
 </resources>

@@ -32,6 +32,6 @@ class TitleAct : AppCompatActivity() {
         findViewById<Button>(R.id.titleActionMap)
             .setOnClickListener { startActivity(GameAct.getIntent(this)) }
         findViewById<Button>(R.id.titleActionSettings)
-            .setOnClickListener { Log.i("TitleAct", "Start Settings") }
+            .setOnClickListener { startActivity(SettingsAct.getIntent(this)) }
     }
 }

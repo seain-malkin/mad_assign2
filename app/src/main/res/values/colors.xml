@@ -6,4 +6,8 @@
     <color name="colorAccent">#03DAC5</color>
 
     <color name="colorOnPrimary">#fff</color>
+
+    <color name="colorSurface">#FFF</color>
+    <color name="colorOnSurfaceDark">#5F7B91</color>
+    <color name="colorOnSurfaceDarker">#2D5878</color>
 </resources>
