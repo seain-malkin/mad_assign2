@@ -39,7 +39,8 @@
             android:id="@+id/settingsMoney"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="number" />
+            android:inputType="number"
+            style="@style/formInput"/>
 
         <TextView
             android:layout_width="wrap_content"
@@ -51,7 +52,8 @@
             android:id="@+id/settingsMapHeight"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="number"/>
+            android:inputType="number"
+            style="@style/formInput"/>
 
         <TextView
             android:layout_width="wrap_content"
@@ -63,7 +65,8 @@
             android:id="@+id/settingsMapWidth"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="number"/>
+            android:inputType="number"
+            style="@style/formInput"/>
 
     </LinearLayout>
 
@@ -78,7 +81,7 @@
         android:gravity="right">
 
         <Button
-            android:id="@+id/settingsCancel"
+            android:id="@+id/settingsActionCancel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/settings_action_cancel"
@@ -86,7 +89,7 @@
             android:layout_marginRight="4dp"/>
 
         <Button
-            android:id="@+id/settingsSave"
+            android:id="@+id/settingsActionSave"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/settings_action_save"/>

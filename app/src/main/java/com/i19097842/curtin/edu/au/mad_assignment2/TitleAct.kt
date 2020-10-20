@@ -1,10 +1,15 @@
 package com.i19097842.curtin.edu.au.mad_assignment2
 
+import android.app.Activity
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
 import android.widget.TextView
+import com.i19097842.curtin.edu.au.mad_assignment2.models.Game
+
+private const val LAUNCH_SETTINGS_ACTIVITY = 1
 
 /**
  * Title Activity: Displays the app name and author with the option to change settings or start
@@ -31,7 +36,28 @@ class TitleAct : AppCompatActivity() {
         // Set action button events
         findViewById<Button>(R.id.titleActionMap)
             .setOnClickListener { startActivity(GameAct.getIntent(this)) }
+
         findViewById<Button>(R.id.titleActionSettings)
-            .setOnClickListener { startActivity(SettingsAct.getIntent(this)) }
+            .setOnClickListener {
+                startActivityForResult(SettingsAct.getIntent(this), LAUNCH_SETTINGS_ACTIVITY)
+            }
+    }
+
+    /**
+     * @see AppCompatActivity.onActivityResult
+     */
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        // Expecting settings activity result
+        if (requestCode == LAUNCH_SETTINGS_ACTIVITY && resultCode == Activity.RESULT_OK) {
+            data?.let {
+                Game.get.settings.run {
+                    initialMoney = SettingsAct.getInitialMoney(it, initialMoney)
+                    mapWidth = SettingsAct.getMapWidth(it, mapWidth)
+                    mapHeight = SettingsAct.getMapHeight(it, mapHeight)
+                }
+            }
+        }
     }
 }

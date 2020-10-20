@@ -24,6 +24,10 @@
         <item name="android:textColor">@color/colorOnSurfaceDark</item>
     </style>
 
+    <style name="formInput" parent="TextAppearance.MaterialComponents.Body1">
+        <item name="android:textColor">@color/colorOnSurfaceDarker</item>
+    </style>
+
     <style name="formActionCancel" parent="Widget.MaterialComponents.Button">
         <item name="android:backgroundTint">@android:color/holo_red_light</item>
     </style>
