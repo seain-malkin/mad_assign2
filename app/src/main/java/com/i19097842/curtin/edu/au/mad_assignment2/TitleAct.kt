@@ -33,13 +33,19 @@ class TitleAct : AppCompatActivity() {
             getString(R.string.author_name),
             getString(R.string.author_id))
 
-        // Set action button events
+        // Launch Game Activity
         findViewById<Button>(R.id.titleActionMap)
             .setOnClickListener { startActivity(GameAct.getIntent(this)) }
 
+        // Launch Settings Activity
         findViewById<Button>(R.id.titleActionSettings)
             .setOnClickListener {
-                startActivityForResult(SettingsAct.getIntent(this), LAUNCH_SETTINGS_ACTIVITY)
+                startActivityForResult(SettingsAct.getIntent(
+                    this,
+                    Game.get.settings.initialMoney,
+                    Game.get.settings.mapWidth,
+                    Game.get.settings.mapHeight
+                ), LAUNCH_SETTINGS_ACTIVITY)
             }
     }
 
