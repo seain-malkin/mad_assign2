@@ -16,7 +16,7 @@ import java.lang.RuntimeException
  */
 class Game {
     /** @property[Game.map] The map object */
-    val map: GameMap
+    var map: GameMap
 
     /** @property[Game.settings] Default or persistant settings */
     val settings: Settings = Settings()
@@ -44,9 +44,17 @@ class Game {
 
     init {
         // TODO: Check if a database object exists and load game from that
-        // Otherwise create a new game and save to the database
-        money = settings.initialMoney
 
+        // Placeholder map with one element to ensure map is never null
+        map = GameMap(arrayOf(arrayOf(GameMap.MapElement(false, 0, 0, 0, 0))))
+    }
+
+    /**
+     * Begins the game. If a new game, the map is created and stored in the database along with
+     * the current settings.
+     */
+    fun start() {
+        money = settings.initialMoney
         map = GameMap(MapData.generateGrid(settings.mapHeight, settings.mapWidth))
     }
 
