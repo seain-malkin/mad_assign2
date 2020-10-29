@@ -162,7 +162,7 @@ class Game {
         if (element.buildable && element.structure == null) {
             // If building, ensure a road is adjacent
             if (structure is Building && adjacentToRoad(position)) {
-                element.structure = structure
+                element.structure = structure.clone()
                 // Update building totals
                 when (structure is Residential) {
                     true -> nResidential++
@@ -172,7 +172,7 @@ class Game {
             }
             // Otherwise if not building then place it
             else if (structure !is Building) {
-                element.structure = structure
+                element.structure = structure.clone()
                 placed = true
             }
         }

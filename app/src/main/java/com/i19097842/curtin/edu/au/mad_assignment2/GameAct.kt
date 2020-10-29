@@ -1,5 +1,6 @@
 package com.i19097842.curtin.edu.au.mad_assignment2
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
@@ -58,6 +59,20 @@ class GameAct : MapFrag.MapListener, StructFrag.StructListener, MetaFrag.MetaLis
                         add(R.id.gameFrameMeta, it)
                     }
                     commit()
+                }
+            }
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        // Expecting details activity result
+        if (requestCode == LAUNCH_DETAILS_ACTIVITY && resultCode == Activity.RESULT_OK) {
+            data?.let {
+                // Update the structure name
+                Game.get.map.get(DetailsAct.getCol(it), DetailsAct.getRow(it)).run {
+                    DetailsAct.getName(it)?.let { name -> this.structure?.name = name }
                 }
             }
         }

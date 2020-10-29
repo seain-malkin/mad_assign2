@@ -1,9 +1,13 @@
 package com.i19097842.curtin.edu.au.mad_assignment2
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.Button
+import android.widget.EditText
+import android.widget.TextView
 
 /**
  * Argument constants for intent data
@@ -17,6 +21,35 @@ class DetailsAct : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_details)
+
+        val row = intent.getIntExtra(ARG_ROW, 0)
+        val col = intent.getIntExtra(ARG_COL, 0)
+
+
+        // Find view elements
+        val coordTv = findViewById<TextView>(R.id.detailsCoord)
+        val typeTv = findViewById<TextView>(R.id.detailsType)
+        val nameEt = findViewById<EditText>(R.id.detailsName)
+        val saveBtn = findViewById<Button>(R.id.detailsActionSave)
+        val cancelBtn = findViewById<Button>(R.id.detailsActionCancel)
+
+        // Update elements
+        coordTv.setText(resources.getString(R.string.details_coord, row, col))
+        typeTv.setText(resources.getString(R.string.details_type, intent.getStringExtra(ARG_TYPE)))
+        nameEt.setText(intent.getStringExtra(ARG_NAME))
+
+        // Set button events
+        saveBtn.setOnClickListener {
+            val details = Intent()
+            details.putExtra(ARG_ROW, row)
+            details.putExtra(ARG_COL, col)
+            details.putExtra(ARG_NAME, nameEt.text.toString())
+
+            setResult(Activity.RESULT_OK, details)
+            finish()
+        }
+
+        cancelBtn.setOnClickListener{ finish() }
     }
 
     companion object {
@@ -37,6 +70,18 @@ class DetailsAct : AppCompatActivity() {
             intent.putExtra(ARG_NAME, name)
 
             return intent
+        }
+
+        fun getRow(intent: Intent, default: Int = 0) : Int {
+            return intent.getIntExtra(ARG_ROW, default)
+        }
+
+        fun getCol(intent: Intent, default: Int = 0) : Int {
+            return intent.getIntExtra(ARG_COL, default)
+        }
+
+        fun getName(intent: Intent) : String? {
+            return intent.getStringExtra(ARG_NAME)
         }
     }
 }
