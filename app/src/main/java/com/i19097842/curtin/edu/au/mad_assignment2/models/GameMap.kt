@@ -31,7 +31,25 @@ class GameMap(
      * @param[position] The one-dimensional index of the two-dimensional grid
      */
     fun get(position: Int): MapElement {
-        return get(position / height, position % height)
+        return get(getXFromPos(position), getYFromPos(position))
+    }
+
+    /**
+     * Returns the x coordinate from the global position
+     * @param[int] The position on the grid
+     * @return The x coordinate
+     */
+    fun getXFromPos(position: Int) : Int {
+        return position / height
+    }
+
+    /**
+     * Returns the y coordinate from the global position
+     * @param[int] The position on the grid
+     * @return The y coordinate
+     */
+    fun getYFromPos(position: Int ) : Int {
+        return position % height
     }
 
     /**
@@ -54,4 +72,8 @@ class GameMap(
         val se: Int,
         var structure: Structure? = null
     )
+
+    companion object {
+
+    }
 }

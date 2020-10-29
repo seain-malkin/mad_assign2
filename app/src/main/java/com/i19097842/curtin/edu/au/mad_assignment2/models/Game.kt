@@ -15,6 +15,13 @@ import java.lang.RuntimeException
  * https://stackoverflow.com/questions/54075649/access-application-context-in-companion-object-in-kotlin
  */
 class Game {
+    /**
+     * Enumerator class to identify action mode when interacting with map
+     */
+    enum class EditMode {
+        BUILD, DELETE, DETAILS
+    }
+
     /** @property[Game.map] The map object */
     var map: GameMap
 
@@ -203,12 +210,5 @@ class Game {
      */
     fun adjacentToRoad(position: Int) : Boolean {
         return adjacentToRoad(position / map.height, position % map.height)
-    }
-
-    /**
-     * Enumerator class to identify action mode when interacting with map
-     */
-    enum class EditMode {
-        BUILD, DELETE, DETAILS
     }
 }

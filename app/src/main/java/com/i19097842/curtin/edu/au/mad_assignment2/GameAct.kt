@@ -12,6 +12,8 @@ import com.i19097842.curtin.edu.au.mad_assignment2.models.Game
 import com.i19097842.curtin.edu.au.mad_assignment2.models.GameMap
 import com.i19097842.curtin.edu.au.mad_assignment2.models.Structure
 
+private const val LAUNCH_DETAILS_ACTIVITY = 1
+
 /**
  * GameData.kt Activity: This is the games core activity.
  *
@@ -62,15 +64,37 @@ class GameAct : MapFrag.MapListener, StructFrag.StructListener, MetaFrag.MetaLis
     }
 
     /**
+     * Begins the Details Activity
+     * @param[structure] The structure the details explain
+     * @param[position] The position of the structure on the map
+     */
+    private fun launchDetailsActivity(structure: Structure, position: Int) {
+        startActivityForResult(DetailsAct.getIntent(
+            this,
+            Game.get.map.getYFromPos(position),
+            Game.get.map.getXFromPos(position),
+            structure.getTypeString(),
+            structure.name
+        ), LAUNCH_DETAILS_ACTIVITY)
+    }
+
+    /**
      * Handle map click
      * @see [MapFrag.MapListener.onMapClick]
      */
     override fun onMapClick(element: GameMap.MapElement, position: Int) {
         var updated = false
 
+        // Perform appropriate function depending on the edit mode selected
+        // Determine if map needs to be updated afterwards
         updated = when (editMode) {
             Game.EditMode.BUILD -> selectedStruct != null && Game.get.putStructure(selectedStruct!!, position)
-            Game.EditMode.DETAILS -> false
+            Game.EditMode.DETAILS -> {
+                // Only launch if a structure exists
+                element.structure?.let { launchDetailsActivity(it, position) }
+                // No visual map changes, no update needed
+                false
+            }
             Game.EditMode.DELETE -> Game.get.deleteStructure(position)
         }
 
