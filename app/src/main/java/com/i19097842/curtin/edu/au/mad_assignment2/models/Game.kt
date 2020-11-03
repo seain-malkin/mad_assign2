@@ -1,8 +1,8 @@
 package com.i19097842.curtin.edu.au.mad_assignment2.models
 
-import android.util.Log
 import com.i19097842.curtin.edu.au.mad_assignment2.lib.MapData
 import java.lang.RuntimeException
+import kotlin.math.min
 
 /**
  * Represents the current game been played. Implemented as a Singleton as only one game can be
@@ -16,6 +16,14 @@ import java.lang.RuntimeException
  */
 class Game {
     /**
+     * Singleton reference
+     */
+    companion object {
+        /** @property[get] Singleton object reference */
+        val get = Game()
+    }
+
+    /**
      * Enumerator class to identify action mode when interacting with map
      */
     enum class EditMode {
@@ -28,32 +36,15 @@ class Game {
     /** @property[Game.settings] Default or persistant settings */
     val settings: Settings = Settings()
 
-    /** @property[Game.money] Players overall cash */
-    var money: Int = 0
-        private set
-
-    /** @property[Game.gameTime] Game ticks */
-    var gameTime: Int = 0
-        private set
-
-    /** @property[Game.population] The number of people residing in the town */
-    var population: Int = 0
-        private set
-        get() {return settings.familySize * 10}
-
-    /** @property[Game.nResidential] The number of residential structures */
-    var nResidential: Int = 0
-        private set
-
-    /** @property [Game.nCommercial] The number of commercial structures */
-    var nCommercial: Int = 0
-        private set
+    /** @property[Game.values] Game related variables that change with the game */
+    val values: Values
 
     init {
         // TODO: Check if a database object exists and load game from that
 
         // Placeholder map with one element to ensure map is never null
         map = GameMap(arrayOf(arrayOf(GameMap.MapElement(false, 0, 0, 0, 0))))
+        values = Values()
     }
 
     /**
@@ -61,13 +52,39 @@ class Game {
      * the current settings.
      */
     fun start() {
-        money = settings.initialMoney
+        values.adjustMoney(settings.initialMoney)
         map = GameMap(MapData.generateGrid(settings.mapHeight, settings.mapWidth))
     }
 
-    companion object {
-        /** @property[get] Singleton object reference */
-        val get = Game()
+    /**
+     * Runs game logic required for each game tick. Firstly all game values are re-calculated then
+     * the win or loss conditions are checked
+     */
+    fun tick() {
+        // Progress game time
+        values.ticks++
+
+        calculateGameValues()
+
+        //TODO: Check for loss condition
+        //TODO: Check for win condition
+    }
+
+    /**
+     * Calculates the new game values
+     */
+    private fun calculateGameValues() {
+        // Calculate: population
+        values.population = values.nResidential * settings.familySize
+
+        // Calculate: Employment Rate
+        values.employmentRate = min(1.0,
+            (values.nCommercial * settings.shopSize / values.population).toDouble())
+
+        // Calculate: Revenue
+        values.adjustMoney(values.population * (
+                (values.employmentRate * settings.salary * settings.taxRate)
+                        - settings.serviceCost).toInt())
     }
 
     /**
@@ -76,7 +93,7 @@ class Game {
      */
     fun deleteStructure(position: Int) : Boolean {
         val element = map.get(position)
-        var deleted = false
+        var deleted = true
 
         if (element.structure is Road) {
             deleted = deleteRoad(position)
@@ -84,13 +101,12 @@ class Game {
         else {
             // Update structure totals
             when (element.structure) {
-                is Residential -> nResidential--
-                is Commercial -> nCommercial--
+                is Residential -> values.nResidential--
+                is Commercial -> values.nCommercial--
                 else -> {/** do nothing */}
             }
             // Delete structure reference
             element.structure = null
-            deleted = true
         }
 
         return deleted
@@ -100,7 +116,7 @@ class Game {
      * Checks if any buildings rely on a road at the given position
      * @param[position] THe position on the map
      */
-    fun deleteRoad(position: Int) : Boolean {
+    private fun deleteRoad(position: Int) : Boolean {
         return deleteRoad(position / map.height, position % map.height)
     }
 
@@ -109,7 +125,7 @@ class Game {
      * @param[x] The x coordinate on the map
      * @param[y] The y coordinate on the map
      */
-    fun deleteRoad(x: Int, y: Int) : Boolean {
+    private fun deleteRoad(x: Int, y: Int) : Boolean {
         var safeDelete = true
         val element = map.get(x, y)
 
@@ -165,8 +181,8 @@ class Game {
                 element.structure = structure.clone()
                 // Update building totals
                 when (structure is Residential) {
-                    true -> nResidential++
-                    false -> nCommercial++
+                    true -> values.nResidential++
+                    false -> values.nCommercial++
                 }
                 placed = true
             }
@@ -185,8 +201,8 @@ class Game {
      * @param[x] The x coordinate on the map
      * @param[y] The y coordinate on the map
      */
-    fun adjacentToRoad(x: Int, y: Int) : Boolean {
-        var isAdjacent: Boolean = false
+    private fun adjacentToRoad(x: Int, y: Int) : Boolean {
+        var isAdjacent = false
 
         // North and South (Y axis) - Step by 2 to skip the element being placed on to
         for (i in (y-1)..(y+1) step 2) {
@@ -208,7 +224,7 @@ class Game {
      * Checks if a road is adjacent to a map position. Either North, east, south or west
      * @param[position] The map position to check adjacency
      */
-    fun adjacentToRoad(position: Int) : Boolean {
+    private fun adjacentToRoad(position: Int) : Boolean {
         return adjacentToRoad(position / map.height, position % map.height)
     }
 }
