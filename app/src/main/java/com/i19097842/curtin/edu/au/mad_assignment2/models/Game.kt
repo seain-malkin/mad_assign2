@@ -30,30 +30,40 @@ class Game {
         BUILD, DELETE, DETAILS
     }
 
+    /** @property[Game.id] The database id for this game */
+    var id: Int? = null
+
     /** @property[Game.map] The map object */
-    var map: GameMap
+    lateinit var map: GameMap
 
     /** @property[Game.settings] Default or persistant settings */
     val settings: Settings = Settings()
 
     /** @property[Game.values] Game related variables that change with the game */
-    val values: Values
-
-    init {
-        // TODO: Check if a database object exists and load game from that
-
-        // Placeholder map with one element to ensure map is never null
-        map = GameMap(arrayOf(arrayOf(GameMap.MapElement(false, 0, 0, 0, 0))))
-        values = Values()
-    }
+    lateinit var values: Values
 
     /**
      * Begins the game. If a new game, the map is created and stored in the database along with
      * the current settings.
      */
-    fun start() {
+    fun newGame() {
+        values = Values()
         values.adjustMoney(settings.initialMoney)
         map = GameMap(MapData.generateGrid(settings.mapHeight, settings.mapWidth))
+    }
+
+    /**
+     * Retrieves the game state from persistent storage
+     */
+    fun resumeGame() {
+
+    }
+
+    /**
+     * Saves the game state to persistent storage
+     */
+    fun saveGame() {
+
     }
 
     /**

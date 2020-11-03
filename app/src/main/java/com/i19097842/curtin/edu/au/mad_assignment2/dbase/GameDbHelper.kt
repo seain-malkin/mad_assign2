@@ -33,7 +33,8 @@ class GameDbHelper(context: Context)
      */
     override fun onCreate(db: SQLiteDatabase?) {
         db?.let {
-            createValues(it)
+            createGameTable(it)
+            createValuesTable(it)
         }
     }
 
@@ -46,10 +47,21 @@ class GameDbHelper(context: Context)
     }
 
     /**
+     * Creates the Game table
+     * @param[db] The database resource
+     */
+    private fun createGameTable(db: SQLiteDatabase) {
+        val table = GameSchema.game
+        db.execSQL("CREATE TABLE " + table.NAME + "("
+                + table.cols.ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+                + table.cols.SAVE_TIME + " INTEGER)")
+    }
+
+    /**
      * Creates the Values table
      * @param[db] The database resource
      */
-    private fun createValues(db: SQLiteDatabase) {
+    private fun createValuesTable(db: SQLiteDatabase) {
         val table = GameSchema.values
         db.execSQL("CREATE TABLE " + table.NAME + "("
                 + table.cols.ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "

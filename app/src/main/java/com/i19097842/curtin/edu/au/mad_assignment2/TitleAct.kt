@@ -37,7 +37,7 @@ class TitleAct : AppCompatActivity() {
         findViewById<Button>(R.id.titleActionMap)
             .setOnClickListener {
                 // Begin the game before launching the activity
-                Game.get.start()
+                Game.get.newGame()
                 // Launch the game
                 startActivity(GameAct.getIntent(this))
             }
