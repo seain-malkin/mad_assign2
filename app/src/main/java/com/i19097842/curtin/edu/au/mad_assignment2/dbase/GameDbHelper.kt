@@ -56,28 +56,21 @@ class GameDbHelper(context: Context)
      * @param[table] The table object
      * @param[values] The data to insert
      * @param[rowId] The row id. Set to null for new entry
+     * @return The affected row id. -1 is returned if nothing was changed
      */
-    fun save(table: Table, values: ContentValues, rowId: Int? = null) {
+    fun save(table: Table, values: ContentValues, rowId: Int? = null) : Int {
         // Either insert or update depending if the database id is already set
-        if (rowId == null) {
+        val rowAffected = if (rowId == null) {
             // Insert and retrieve the new row id
-            val id = db.insert(table.name, null, values).toInt()
-
-            // Throw an exception if not inserted
-            if (id == -1) {
-                throw IllegalStateException("Could not insert a new row into table: ${table.name}")
-            }
-        }
-        else {
+            db.insert(table.name, null, values).toInt()
+        } else {
             // Update the existing values row
-            val affectedRows = db.update(table.name, values, table.cols.id + " = ?",
+            db.update(table.name, values, table.cols.id + " = ?",
                 arrayOf(rowId.toString()))
-
-            // Throw an exception if none or many rows updated
-            if (affectedRows != 1) {
-                throw IllegalStateException("Could not update values table with id $rowId")
-            }
         }
+
+        // Return -1 on error or the rowId that was inserted or updated
+        return when(rowAffected) { -1 -> -1 else -> rowId ?: rowAffected }
     }
 
     /**
