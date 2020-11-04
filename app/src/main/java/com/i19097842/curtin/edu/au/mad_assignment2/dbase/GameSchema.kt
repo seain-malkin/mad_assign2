@@ -21,61 +21,68 @@ class GameSchema {
     }
 
     /**
+     * All database tables extend this class. Ensures that every table has a name and
+     * defined columns with at least the 'id' property
+     */
+    abstract class Table(val name: String) {
+        abstract val cols: TableColumns
+    }
+
+    /**
+     * Ensures all database tables has an 'id' column
+     */
+    abstract class TableColumns(val id: String = "id")
+
+    /**
      * Table: Game
      */
-    class GameTable {
-        val NAME = "game"
-        val cols = Cols()
+    class GameTable : Table("game") {
+        override val cols = GameTableColumns()
 
-        class Cols {
-            val ID = "id"
-            val SAVE_TIME = "save_time"
+        class GameTableColumns : TableColumns() {
+            val title: String = "title"
+            val saveTime: String = "save_time"
         }
     }
 
     /**
      * Table: Settings
      */
-    class SettingsTable {
-        val NAME = "settings"
-        val cols = Cols()
+    class SettingsTable : Table("settings"){
+        override val cols = SettingsTableColumns()
 
-        class Cols {
-            val ID = "id"
-            val GAME_ID = "game_id"
-            val MAP_WIDTH = "map_width"
-            val MAP_HEIGHT = "map_height"
-            val FAMILY_SIZE = "family_size"
-            val SHOP_SIZE = "shop_size"
-            val SALARY = "salary"
-            val TAX_RATE = "tax_rate"
-            val SERVICE_COST = "service_cost"
-            val RESI_COST = "resi_cost"
-            val COMM_COST = "comm_cost"
-            val ROAD_COST = "road_cost"
-            val TREE_COST = "tree_cost"
+        class SettingsTableColumns : TableColumns() {
+            val gameId = "game_id"
+            val mapWidth = "map_width"
+            val mapHeight = "map_height"
+            val initialMoney = "initial_money"
+            val familySize = "family_size"
+            val shopSize = "shop_size"
+            val salary = "salary"
+            val taxRate = "tax_rate"
+            val serviceCost = "service_cost"
+            val resiCost = "resi_cost"
+            val commCost = "comm_cost"
+            val roadCost = "road_cost"
+            val treeCost = "tree_cost"
         }
     }
 
     /**
      * Table: Values
      */
-    class ValuesTable {
-        // Table name
-        val NAME = "values"
-        val cols = Cols()
+    class ValuesTable : Table("values") {
+        override val cols = ValuesTableColumns()
 
-        // Table columns
-        class Cols {
-            val ID = "id"
-            val GAME_ID = "game_id"
-            val TICKS = "ticks"
-            val MONEY = "money"
-            val MONEY_CHANGE = "money_change"
-            val POPULATION = "population"
-            val EMPLOYMENT_RATE = "employment_rate"
-            val RESIDENTIAL = "residential"
-            val COMMERCIAL = "commercial"
+        class ValuesTableColumns : TableColumns() {
+            val gameId = "game_id"
+            val ticks = "ticks"
+            val money = "money"
+            val moneyChange = "money_change"
+            val population = "population"
+            val employmentRate = "employment_rate"
+            val residential = "residential"
+            val commercial = "commercial"
         }
     }
 }
