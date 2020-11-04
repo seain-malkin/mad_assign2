@@ -1,7 +1,6 @@
 package com.i19097842.curtin.edu.au.mad_assignment2.models
 
 import android.content.ContentValues
-import android.database.Cursor
 import com.i19097842.curtin.edu.au.mad_assignment2.dbase.GameDbHelper
 import com.i19097842.curtin.edu.au.mad_assignment2.dbase.GameSchema
 
