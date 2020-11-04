@@ -46,9 +46,10 @@ class GameMap(
                 null, null, null
             ).run {
                 if (count > 0) {
-                    // Initialise a temporary grid array
+                    // Initialise the array and use the appropriate cursor based on coordinates
                     grid = Array(height) { y ->
                         Array<MapElement>(width) { x ->
+                            // If move fails then something went terribly wrong :(
                             if (!move(y * x -1)) {
                                 throw IllegalStateException("Error loading all map elements")
                             }
