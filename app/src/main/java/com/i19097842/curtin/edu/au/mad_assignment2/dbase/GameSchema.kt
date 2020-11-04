@@ -10,13 +10,9 @@ class GameSchema {
      * Contains static fields that reference the table inner classes
      */
     companion object  {
-        @JvmStatic
         val game = GameTable()
-
-        @JvmStatic
+        val map = MapTable()
         val settings = SettingsTable()
-
-        @JvmStatic
         val values = ValuesTable()
     }
 
@@ -42,6 +38,25 @@ class GameSchema {
         class GameTableColumns : TableColumns() {
             val title: String = "title"
             val saveTime: String = "save_time"
+        }
+    }
+
+    /**
+     * Table: GameMap
+     */
+    class MapTable : Table("map") {
+        override val cols = MapTableColumns()
+
+        class MapTableColumns : TableColumns() {
+            val gameId = "game_id"
+            val gridIndex = "grid_index"
+            val buildable = "buildable"
+            val nw = "nw"
+            val ne = "ne"
+            val sw = "sw"
+            val se = "se"
+            val structureType = "structure_type"
+            val drawable = "drawable"
         }
     }
 

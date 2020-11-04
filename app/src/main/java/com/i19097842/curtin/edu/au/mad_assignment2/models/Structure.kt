@@ -11,6 +11,25 @@ open class Structure(val drawable: Int, var name: String) {
     open fun clone(): Structure {
         return Structure(drawable, name)
     }
+
+    companion object {
+        /**
+         * Static factory method for creating structures
+         * @param[type] String representation of structure
+         * @param[drawable] The drawable id
+         * @return The structure object
+         */
+        @JvmStatic
+        fun factory(type: String, drawable: Int) : Structure {
+            return when(type) {
+                "Residential" -> Residential(drawable)
+                "Commercial" -> Commercial(drawable)
+                "Road" -> Road(drawable)
+                "Tree" -> Road(drawable)
+                else -> Structure(drawable, "Basic")
+            }
+        }
+    }
 }
 
 interface Building
