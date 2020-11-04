@@ -98,7 +98,7 @@ class GameDbHelper(context: Context)
         db.execSQL("CREATE TABLE " + table.name + "("
                 + table.cols.id + " INTEGER PRIMARY KEY AUTOINCREMENT, "
                 + table.cols.title + " TEXT"
-                + table.cols.saveTime + " INTEGER)")
+                + table.cols.saveTime + " INTEGER NOT NULL)")
     }
 
     /**

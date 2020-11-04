@@ -1,7 +1,11 @@
 package com.i19097842.curtin.edu.au.mad_assignment2.models
 
+import android.content.ContentValues
+import com.i19097842.curtin.edu.au.mad_assignment2.dbase.GameDbHelper
+import com.i19097842.curtin.edu.au.mad_assignment2.dbase.GameSchema
 import com.i19097842.curtin.edu.au.mad_assignment2.lib.MapData
 import java.lang.RuntimeException
+import java.util.*
 import kotlin.math.min
 
 /**
@@ -33,37 +37,66 @@ class Game {
     /** @property[Game.id] The database id for this game */
     var id: Int? = null
 
+    /**  */
+    var title: String? = null
+
     /** @property[Game.map] The map object */
     lateinit var map: GameMap
 
     /** @property[Game.settings] Default or persistant settings */
-    val settings: Settings = Settings()
+    val settings: Settings
 
     /** @property[Game.values] Game related variables that change with the game */
-    lateinit var values: Values
+    val values: Values
 
     /**
-     * Begins the game. If a new game, the map is created and stored in the database along with
-     * the current settings.
+     * Either load the previous game from the database or
+     * initialise a new game
      */
-    fun newGame() {
-        values = Values()
-        values.adjustMoney(settings.initialMoney)
-        map = GameMap(MapData.generateGrid(settings.mapHeight, settings.mapWidth))
+    init {
+        val table = GameSchema.game
+
+        // Get the game with the most recent save time
+        GameDbHelper.db.query(
+            table.name,
+            arrayOf(table.cols.id, table.cols.title),
+            null, null, null, null,
+            table.cols.saveTime + " DESC",
+            "1"
+        ).run {
+            if (count == 1) {
+                // Setup the game from the database result
+                moveToFirst()
+                id = getInt(getColumnIndex(table.cols.id))
+                title = getString(getColumnIndex(table.cols.title))
+                settings = Settings(id!!)
+                values = Values(id!!)
+            } else {
+                // No previous game. Initialise a new game
+                settings = Settings()
+                values = Values()
+            }
+
+            close()
+        }
     }
 
     /**
-     * Retrieves the game state from persistent storage
+     * Saves all game data to persistent storage
      */
-    fun resumeGame() {
+    fun save() {
+        val cv = ContentValues()
+        GameSchema.game.cols.let {
+            cv.put(it.title, title)
+            cv.put(it.saveTime, Date().time.toInt())
+        }
 
-    }
+        // Save game data and get row id
+        id = GameDbHelper.instance.save(GameSchema.game, cv, id)
 
-    /**
-     * Saves the game state to persistent storage
-     */
-    fun saveGame() {
-
+        // Save or update data associated the game
+        settings.save(id!!)
+        values.save(id!!)
     }
 
     /**
