@@ -53,8 +53,22 @@ class Game {
 
     lateinit var dbHelper: GameDbHelper
 
+    /**
+     * Injects the context and loads data from the database
+     * @param[context] The activity or application context
+     */
     fun load(context: Context) {
-        dbHelper = GameDbHelper(context)
+        // If dbHelper is already initialised then the game is already loaded
+        if (!::dbHelper.isInitialized) {
+            dbHelper = GameDbHelper(context)
+            initGameData()
+        }
+    }
+
+    /**
+     * If a game exists, loads data from database. Otherwise initialises new data
+     */
+    private fun initGameData() {
         val table = GameSchema.game
 
         // Get the game with the most recent save time
@@ -84,11 +98,19 @@ class Game {
     }
 
     /**
+     * Checks if the game has been started.
+     * If the map has been created then it has.
+     */
+    fun inProgress() : Boolean {
+        return ::map.isInitialized
+    }
+
+    /**
      * Ensures the map has been created.
      */
     fun start() {
         // Setup the map if not already
-        if (!::map.isInitialized) {
+        if (!inProgress()) {
             map = GameMap(dbHelper, settings.mapWidth, settings.mapHeight)
         }
     }
@@ -109,6 +131,7 @@ class Game {
         // Save or update data associated the game
         settings.save(id!!)
         values.save(id!!)
+        map.save(id!!)
     }
 
     /**

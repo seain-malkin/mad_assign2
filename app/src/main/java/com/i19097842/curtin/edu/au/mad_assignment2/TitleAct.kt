@@ -28,7 +28,10 @@ class TitleAct : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_title)
 
-        game = Game.get
+        if (!::game.isInitialized) {
+            game = Game.get
+        }
+
         game.load(applicationContext)
 
         // Update author information
@@ -72,6 +75,14 @@ class TitleAct : AppCompatActivity() {
                     mapHeight = SettingsAct.getMapHeight(it, mapHeight)
                 }
             }
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+
+        if (::game.isInitialized) {
+            game.save()
         }
     }
 }

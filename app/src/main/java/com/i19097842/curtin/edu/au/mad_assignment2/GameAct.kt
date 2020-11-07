@@ -23,6 +23,7 @@ private const val LAUNCH_DETAILS_ACTIVITY = 1
 class GameAct : MapFrag.MapListener, StructFrag.StructListener, MetaFrag.MetaListener,
     AppCompatActivity() {
 
+    private lateinit var game: Game
     private var mapFrag: MapFrag? = null
     private var metaFrag: MetaFrag? = null
     private var selectedStruct: Structure? = null
@@ -47,6 +48,11 @@ class GameAct : MapFrag.MapListener, StructFrag.StructListener, MetaFrag.MetaLis
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_game)
+
+        if (!::game.isInitialized) {
+            game = Game.get
+            game.load(applicationContext)
+        }
 
         // attach the map and meta fragments
         if (savedInstanceState == null) {
@@ -75,6 +81,18 @@ class GameAct : MapFrag.MapListener, StructFrag.StructListener, MetaFrag.MetaLis
                     DetailsAct.getName(it)?.let { name -> this.structure?.name = name }
                 }
             }
+        }
+    }
+
+    /**
+     * Save game data to persistent storage
+     * @see [AppCompatActivity.onDestroy]
+     */
+    override fun onDestroy() {
+        super.onDestroy()
+
+        if (::game.isInitialized) {
+            game.save()
         }
     }
 

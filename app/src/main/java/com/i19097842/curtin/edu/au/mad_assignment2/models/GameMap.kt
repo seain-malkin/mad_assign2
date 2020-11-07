@@ -1,6 +1,7 @@
 package com.i19097842.curtin.edu.au.mad_assignment2.models
 
 import android.content.ContentValues
+import android.util.Log
 import com.i19097842.curtin.edu.au.mad_assignment2.dbase.GameDbHelper
 import com.i19097842.curtin.edu.au.mad_assignment2.dbase.GameSchema
 import com.i19097842.curtin.edu.au.mad_assignment2.lib.MapData
@@ -32,6 +33,7 @@ class GameMap(
             dbHelper.db().query(
                 table.name,
                 arrayOf(
+                    table.cols.id,
                     table.cols.gridIndex,
                     table.cols.buildable,
                     table.cols.nw,
@@ -43,17 +45,17 @@ class GameMap(
                 ),
                 "${table.cols.gameId} = ?",
                 arrayOf(gameId.toString()),
-                null, null, null
+                null, null,
+                "grid_index ASC"
             ).run {
                 if (count > 0) {
+                    Log.i("GameMap", "Grid count = $count")
                     // Initialise the array and use the appropriate cursor based on coordinates
                     grid = Array(height) { y ->
+                        Log.i("GameMap", "y = $y")
                         Array<MapElement>(width) { x ->
-                            // If move fails then something went terribly wrong :(
-                            if (!move(y * x -1)) {
-                                throw IllegalStateException("Error loading all map elements")
-                            }
-
+                            Log.i("GampeMap", "x = $x")
+                            moveToNext()
                             val element = MapElement(
                                 getInt(getColumnIndex(table.cols.buildable)) == 1,
                                 getInt(getColumnIndex(table.cols.nw)),
@@ -65,7 +67,7 @@ class GameMap(
                             )
 
                             // If structure stored in database create a structure object
-                            if (!isNull(6)) {
+                            if (!isNull(getColumnIndex(table.cols.structureType))) {
                                 element.structure = Structure.factory(
                                     getString(getColumnIndex(table.cols.structureType)),
                                     getInt(getColumnIndex(table.cols.drawable))
@@ -120,6 +122,10 @@ class GameMap(
      */
     fun getYFromPos(position: Int ) : Int {
         return position % height
+    }
+
+    fun getPositionFromXY(x: Int, y: Int) : Int {
+        return y * height + x
     }
 
     /**

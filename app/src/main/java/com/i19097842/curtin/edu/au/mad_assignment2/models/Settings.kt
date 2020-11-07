@@ -81,7 +81,7 @@ class Settings(val dbHelper: GameDbHelper) {
             cv.put(it.treeCost, treeCost)
         }
 
-        dbHelper.save(GameSchema.values, cv, id)
+        dbHelper.save(GameSchema.settings, cv, id)
     }
 
     /**

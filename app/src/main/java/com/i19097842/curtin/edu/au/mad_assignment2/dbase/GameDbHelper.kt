@@ -12,7 +12,7 @@ import java.lang.IllegalArgumentException
 
 
 private const val DATABASE_NAME = "mada2.db"
-private const val VERSION = 13
+private const val VERSION = 18
 
 /**
  * Handles Database interactions.
@@ -113,6 +113,7 @@ class GameDbHelper(context: Context)
         val table = GameSchema.map
         db.execSQL("CREATE TABLE ${table.name} (" +
                 "${table.cols.id} INTEGER PRIMARY KEY, " +
+                "${table.cols.gridIndex} INTEGER NOT NULL, " +
                 "${table.cols.gameId} INTEGER NOT NULL," +
                 "${table.cols.buildable} INTEGER NOT NULL, " +
                 "${table.cols.nw} INTEGER NOT NULL, " +
