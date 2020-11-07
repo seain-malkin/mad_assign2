@@ -11,8 +11,8 @@ import com.i19097842.curtin.edu.au.mad_assignment2.dbase.GameSchema.Table
 import java.lang.IllegalArgumentException
 
 
-private const val DATABASE_NAME = "mad2.db"
-private const val VERSION = 11
+private const val DATABASE_NAME = "mada2.db"
+private const val VERSION = 13
 
 /**
  * Handles Database interactions.
@@ -36,6 +36,7 @@ class GameDbHelper(context: Context)
     override fun onCreate(db: SQLiteDatabase?) {
         db?.let {
             createGameTable(it)
+            createMapTable(it)
             createSettingsTable(it)
             createValuesTable(it)
         }
@@ -50,6 +51,7 @@ class GameDbHelper(context: Context)
         db?.execSQL("DROP TABLE IF EXISTS ${GameSchema.game.name}")
         db?.execSQL("DROP TABLE IF EXISTS ${GameSchema.values.name}")
         db?.execSQL("DROP TABLE IF EXISTS ${GameSchema.settings.name}")
+        onCreate(db)
     }
 
     /**
@@ -101,6 +103,24 @@ class GameDbHelper(context: Context)
                 + table.cols.id + " INTEGER PRIMARY KEY, "
                 + table.cols.title + " TEXT, "
                 + table.cols.saveTime + " INTEGER NOT NULL)")
+    }
+
+    /**
+     * Creates the Map table
+     * @param[db] The database resource
+     */
+    private fun createMapTable(db: SQLiteDatabase) {
+        val table = GameSchema.map
+        db.execSQL("CREATE TABLE ${table.name} (" +
+                "${table.cols.id} INTEGER PRIMARY KEY, " +
+                "${table.cols.gameId} INTEGER NOT NULL," +
+                "${table.cols.buildable} INTEGER NOT NULL, " +
+                "${table.cols.nw} INTEGER NOT NULL, " +
+                "${table.cols.ne} INTEGER NOT NULL, " +
+                "${table.cols.sw} INTEGER NOT NULL," +
+                "${table.cols.se} INTEGER NOT NULL, " +
+                "${table.cols.structureType} TEXT, " +
+                "${table.cols.drawable} INTEGER)")
     }
 
     /**
