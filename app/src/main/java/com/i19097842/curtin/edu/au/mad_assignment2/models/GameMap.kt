@@ -4,6 +4,7 @@ import android.content.ContentValues
 import com.i19097842.curtin.edu.au.mad_assignment2.dbase.GameDbHelper
 import com.i19097842.curtin.edu.au.mad_assignment2.dbase.GameSchema
 import com.i19097842.curtin.edu.au.mad_assignment2.lib.MapData
+import java.lang.IllegalArgumentException
 import java.lang.IllegalStateException
 
 /**
@@ -15,9 +16,10 @@ import java.lang.IllegalStateException
  * @property[gameId] The database id for the game
  */
 class GameMap(
+    val dbHelper: GameDbHelper,
     val width: Int,
     val height: Int,
-    val gameId: Int?
+    val gameId: Int? = null
 ) {
     val area = height * width
     val grid: Array<out Array<MapElement>>
@@ -27,7 +29,7 @@ class GameMap(
         val table = GameSchema.map
 
         if (gameId != null) {
-            GameDbHelper.db.query(
+            dbHelper.db().query(
                 table.name,
                 arrayOf(
                     table.cols.gridIndex,
@@ -64,7 +66,7 @@ class GameMap(
 
                             // If structure stored in database create a structure object
                             if (!isNull(6)) {
-                                element?.structure = Structure.factory(
+                                element.structure = Structure.factory(
                                     getString(getColumnIndex(table.cols.structureType)),
                                     getInt(getColumnIndex(table.cols.drawable))
                                 )
@@ -143,7 +145,7 @@ class GameMap(
                 }
             }
 
-            element.id = GameDbHelper.instance.save(GameSchema.map, cv, element.id)
+            element.id = dbHelper.save(GameSchema.map, cv, element.id)
         }
     }
 

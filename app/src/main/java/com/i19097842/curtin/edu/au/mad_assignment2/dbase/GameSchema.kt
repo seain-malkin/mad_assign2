@@ -86,7 +86,7 @@ class GameSchema {
     /**
      * Table: Values
      */
-    class ValuesTable : Table("values") {
+    class ValuesTable : Table("game_values") {
         override val cols = ValuesTableColumns()
 
         class ValuesTableColumns : TableColumns() {

@@ -5,12 +5,14 @@ import android.content.Context
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
+import android.util.Log
 import com.i19097842.curtin.edu.au.mad_assignment2.GameApp
 import com.i19097842.curtin.edu.au.mad_assignment2.dbase.GameSchema.Table
+import java.lang.IllegalArgumentException
 
 
-private const val DATABASE_NAME = "madass2.db"
-private const val VERSION = 1
+private const val DATABASE_NAME = "mad2.db"
+private const val VERSION = 11
 
 /**
  * Handles Database interactions.
@@ -23,12 +25,8 @@ private const val VERSION = 1
 class GameDbHelper(context: Context)
     : SQLiteOpenHelper(context, DATABASE_NAME, null, VERSION) {
 
-    /**
-     * Singleton reference
-     */
-    companion object {
-        val instance = GameDbHelper(GameApp.getContext())
-        val db = instance.writableDatabase
+    fun db() : SQLiteDatabase{
+        return writableDatabase
     }
 
     /**
@@ -48,7 +46,10 @@ class GameDbHelper(context: Context)
      * @see[SQLiteOpenHelper.onUpgrade]
      */
     override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
-        TODO("Not yet implemented")
+        db?.execSQL("DROP TABLE IF EXISTS ${GameSchema.map.name}")
+        db?.execSQL("DROP TABLE IF EXISTS ${GameSchema.game.name}")
+        db?.execSQL("DROP TABLE IF EXISTS ${GameSchema.values.name}")
+        db?.execSQL("DROP TABLE IF EXISTS ${GameSchema.settings.name}")
     }
 
     /**
@@ -62,10 +63,10 @@ class GameDbHelper(context: Context)
         // Either insert or update depending if the database id is already set
         val rowAffected = if (rowId == null) {
             // Insert and retrieve the new row id
-            db.insert(table.name, null, values).toInt()
+            writableDatabase.insert(table.name, null, values).toInt()
         } else {
             // Update the existing values row
-            db.update(table.name, values, table.cols.id + " = ?",
+            writableDatabase.update(table.name, values, table.cols.id + " = ?",
                 arrayOf(rowId.toString()))
         }
 
@@ -81,7 +82,7 @@ class GameDbHelper(context: Context)
      * @return The database result as a cursor
      */
     fun open(table: Table, idKey: String, idValue: Int) : Cursor {
-        return db.query(
+        return writableDatabase.query(
             table.name,
             null,
             "$idKey = ?",
@@ -95,9 +96,10 @@ class GameDbHelper(context: Context)
      */
     private fun createGameTable(db: SQLiteDatabase) {
         val table = GameSchema.game
+        Log.i("GameDbHelper", "Creating database: ${table.name}.")
         db.execSQL("CREATE TABLE " + table.name + "("
-                + table.cols.id + " INTEGER PRIMARY KEY AUTOINCREMENT, "
-                + table.cols.title + " TEXT"
+                + table.cols.id + " INTEGER PRIMARY KEY, "
+                + table.cols.title + " TEXT, "
                 + table.cols.saveTime + " INTEGER NOT NULL)")
     }
 
@@ -108,7 +110,7 @@ class GameDbHelper(context: Context)
     private fun createSettingsTable(db: SQLiteDatabase) {
         val table = GameSchema.settings
         db.execSQL("CREATE TABLE " + table.name + "("
-                + table.cols.id + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+                + table.cols.id + " INTEGER PRIMARY KEY, "
                 + table.cols.gameId + " INTEGER NOT NULL, "
                 + table.cols.mapWidth + " INTEGER NOT NULL, "
                 + table.cols.mapHeight + " INTEGER NOT NULL, "
@@ -131,7 +133,7 @@ class GameDbHelper(context: Context)
     private fun createValuesTable(db: SQLiteDatabase) {
         val table = GameSchema.values
         db.execSQL("CREATE TABLE " + table.name + "("
-                + table.cols.id + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+                + table.cols.id + " INTEGER PRIMARY KEY, "
                 + table.cols.gameId + " INTEGER NOT NULL, "
                 + table.cols.ticks + " INTEGER NOT NULL, "
                 + table.cols.money + " INTEGER NOT NULL, "

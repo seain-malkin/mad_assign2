@@ -19,6 +19,7 @@ private const val LAUNCH_SETTINGS_ACTIVITY = 1
  * @author Seain Malkin (19097842@student.curtin.edu.au)
  */
 class TitleAct : AppCompatActivity() {
+    lateinit var game: Game
     /**
      * Initialises activity elements and state.
      * @see AppCompatActivity.onCreate]
@@ -26,6 +27,9 @@ class TitleAct : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_title)
+
+        game = Game.get
+        game.load(applicationContext)
 
         // Update author information
         findViewById<TextView>(R.id.titleAuthorName).text =
@@ -36,9 +40,8 @@ class TitleAct : AppCompatActivity() {
         // Launch Game Activity
         findViewById<Button>(R.id.titleActionMap)
             .setOnClickListener {
-                // Begin the game before launching the activity
-                Game.get.newGame()
                 // Launch the game
+                game.start()
                 startActivity(GameAct.getIntent(this))
             }
 

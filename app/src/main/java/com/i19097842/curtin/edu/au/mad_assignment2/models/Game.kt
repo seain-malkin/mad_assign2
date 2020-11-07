@@ -1,8 +1,11 @@
 package com.i19097842.curtin.edu.au.mad_assignment2.models
 
 import android.content.ContentValues
+import android.content.Context
+import android.util.Log
 import com.i19097842.curtin.edu.au.mad_assignment2.dbase.GameDbHelper
 import com.i19097842.curtin.edu.au.mad_assignment2.dbase.GameSchema
+import java.lang.Exception
 import java.lang.RuntimeException
 import java.util.*
 import kotlin.math.min
@@ -43,20 +46,19 @@ class Game {
     lateinit var map: GameMap
 
     /** @property[Game.settings] Default or persistant settings */
-    val settings: Settings
+    lateinit var settings: Settings
 
     /** @property[Game.values] Game related variables that change with the game */
-    val values: Values
+    lateinit var values: Values
 
-    /**
-     * Either load the previous game from the database or
-     * initialise a new game
-     */
-    init {
+    lateinit var dbHelper: GameDbHelper
+
+    fun load(context: Context) {
+        dbHelper = GameDbHelper(context)
         val table = GameSchema.game
 
         // Get the game with the most recent save time
-        GameDbHelper.db.query(
+        dbHelper.db().query(
             table.name,
             arrayOf(table.cols.id, table.cols.title),
             null, null, null, null,
@@ -68,15 +70,26 @@ class Game {
                 moveToFirst()
                 id = getInt(getColumnIndex(table.cols.id))
                 title = getString(getColumnIndex(table.cols.title))
-                settings = Settings(id!!)
-                values = Values(id!!)
+                settings = Settings(dbHelper, id!!)
+                values = Values(dbHelper, id!!)
+                map = GameMap(dbHelper, settings.mapWidth, settings.mapHeight, id!!)
             } else {
                 // No previous game. Initialise a new game
-                settings = Settings()
-                values = Values()
+                settings = Settings(dbHelper)
+                values = Values(dbHelper)
             }
 
             close()
+        }
+    }
+
+    /**
+     * Ensures the map has been created.
+     */
+    fun start() {
+        // Setup the map if not already
+        if (!::map.isInitialized) {
+            map = GameMap(dbHelper, settings.mapWidth, settings.mapHeight)
         }
     }
 
@@ -91,7 +104,7 @@ class Game {
         }
 
         // Save game data and get row id
-        id = GameDbHelper.instance.save(GameSchema.game, cv, id)
+        id = dbHelper.save(GameSchema.game, cv, id)
 
         // Save or update data associated the game
         settings.save(id!!)

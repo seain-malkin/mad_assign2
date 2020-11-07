@@ -10,12 +10,12 @@ import com.i19097842.curtin.edu.au.mad_assignment2.dbase.GameSchema
  *
  * @author Seain Malkin (19097842@student.curtin.edu.au)
  */
-class Values() {
+class Values(val dbHelper: GameDbHelper) {
     /**
      * Secondary constructor. Loads values from persistent storage on initialisation
      * @param[gameId] The game id the values are associated with
      */
-    constructor(gameId: Int) : this() {
+    constructor(dbHelper: GameDbHelper, gameId: Int) : this(dbHelper = dbHelper) {
         load(gameId)
     }
 
@@ -75,7 +75,7 @@ class Values() {
             cv.put(it.commercial, nCommercial)
         }
 
-        GameDbHelper.instance.save(GameSchema.values, cv, id)
+        dbHelper.save(GameSchema.values, cv, id)
     }
 
     /**
@@ -86,7 +86,7 @@ class Values() {
         val cols = GameSchema.values.cols
 
         // Retrieve row from persistent storage.
-        GameDbHelper.instance.open(GameSchema.values, cols.id, gameId).run {
+        dbHelper.open(GameSchema.values, cols.id, gameId).run {
             // Point to first and only result and update object properties
             moveToFirst()
             id = getInt(getColumnIndex(cols.id))
