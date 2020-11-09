@@ -56,6 +56,7 @@ class GameMap(
                         Array<MapElement>(width) { x ->
                             Log.i("GampeMap", "x = $x")
                             moveToNext()
+                            Log.i("Grid", "${getInt(getColumnIndex(table.cols.gridIndex))}")
                             val element = MapElement(
                                 getInt(getColumnIndex(table.cols.buildable)) == 1,
                                 getInt(getColumnIndex(table.cols.nw)),
@@ -124,34 +125,30 @@ class GameMap(
         return position % height
     }
 
-    fun getPositionFromXY(x: Int, y: Int) : Int {
-        return y * height + x
-    }
-
     /**
      * Saves each grid element to persistent storage
+     * @param[gameId] The database id of the game being saved
      */
     fun save(gameId: Int) {
-        // Perform save for every grid position
-        for (i in 1..area) {
-            val element = get(i - 1)
-            val cv = ContentValues()
-
-            GameSchema.map.cols.let {
-                cv.put(it.gameId, gameId)
-                cv.put(it.gridIndex, i)
-                cv.put(it.buildable, if (element.buildable) 1 else 0) // convert boolean to int
-                cv.put(it.nw, element.nw)
-                cv.put(it.ne, element.ne)
-                cv.put(it.sw, element.sw)
-                cv.put(it.se, element.se)
-                element.structure?.let { structure ->
-                    cv.put(it.structureType, structure.getTypeString())
-                    cv.put(it.drawable, structure.drawable)
+        var gridIndex = 0
+        for (y in 0..(height -1)) {
+            for (x in 0..(width -1)) {
+                val cv = ContentValues()
+                GameSchema.map.cols.let {
+                    cv.put(it.gameId, gameId)
+                    cv.put(it.gridIndex, gridIndex++)
+                    cv.put(it.buildable, if (grid[y][x].buildable) 1 else 0) // convert boolean to int
+                    cv.put(it.nw, grid[y][x].nw)
+                    cv.put(it.ne, grid[y][x].ne)
+                    cv.put(it.sw, grid[y][x].sw)
+                    cv.put(it.se, grid[y][x].se)
+                    grid[y][x].structure?.let { structure ->
+                        cv.put(it.structureType, structure.getTypeString())
+                        cv.put(it.drawable, structure.drawable)
+                    }
                 }
+                grid[y][x].id = dbHelper.save(GameSchema.map, cv, grid[y][x].id)
             }
-
-            element.id = dbHelper.save(GameSchema.map, cv, element.id)
         }
     }
 
