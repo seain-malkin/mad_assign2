@@ -49,14 +49,10 @@ class GameMap(
                 "grid_index ASC"
             ).run {
                 if (count > 0) {
-                    Log.i("GameMap", "Grid count = $count")
                     // Initialise the array and use the appropriate cursor based on coordinates
                     grid = Array(height) { y ->
-                        Log.i("GameMap", "y = $y")
                         Array<MapElement>(width) { x ->
-                            Log.i("GampeMap", "x = $x")
                             moveToNext()
-                            Log.i("Grid", "${getInt(getColumnIndex(table.cols.gridIndex))}")
                             val element = MapElement(
                                 getInt(getColumnIndex(table.cols.buildable)) == 1,
                                 getInt(getColumnIndex(table.cols.nw)),
