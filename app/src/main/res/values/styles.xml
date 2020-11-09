@@ -32,4 +32,9 @@
         <item name="android:backgroundTint">@android:color/holo_red_light</item>
     </style>
 
+    <style name="valuesText" parent="TextAppearance.MaterialComponents.Body1">
+        <item name="android:padding">4dp</item>
+        <item name="android:textColor">@color/colorOnSurfaceDarker</item>
+    </style>
+
 </resources>

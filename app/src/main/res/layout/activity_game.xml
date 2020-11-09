@@ -6,12 +6,22 @@
     android:layout_height="match_parent"
     tools:context=".GameAct">
 
+    <fragment
+        android:id="@+id/gameFrameValues"
+        android:name="com.i19097842.curtin.edu.au.mad_assignment2.fragments.ValuesFrag"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/gameFrameMap"/>
+
     <FrameLayout
         android:id="@+id/gameFrameMap"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/gameFrameValues"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toTopOf="@id/gameFrameStruct"/>
 
