@@ -111,6 +111,7 @@ class Game {
     fun start() {
         // Setup the map if not already
         if (!inProgress()) {
+            values.adjustMoney(settings.initialMoney)
             map = GameMap(dbHelper, settings.mapWidth, settings.mapHeight)
         }
     }
