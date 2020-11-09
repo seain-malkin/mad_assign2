@@ -25,7 +25,7 @@ open class Structure(val drawable: Int, var name: String) {
                 "Residential" -> Residential(drawable)
                 "Commercial" -> Commercial(drawable)
                 "Road" -> Road(drawable)
-                "Tree" -> Road(drawable)
+                "Tree" -> Tree(drawable)
                 else -> Structure(drawable, "Basic")
             }
         }
