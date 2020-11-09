@@ -84,12 +84,8 @@ class GameAct : MapFrag.MapListener, StructFrag.StructListener, MetaFrag.MetaLis
         }
     }
 
-    /**
-     * Save game data to persistent storage
-     * @see [AppCompatActivity.onDestroy]
-     */
-    override fun onDestroy() {
-        super.onDestroy()
+    override fun onPause() {
+        super.onPause()
 
         if (::game.isInitialized) {
             game.save()
