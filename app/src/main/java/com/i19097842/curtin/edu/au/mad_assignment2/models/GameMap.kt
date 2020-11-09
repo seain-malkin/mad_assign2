@@ -138,10 +138,15 @@ class GameMap(
                     cv.put(it.ne, grid[y][x].ne)
                     cv.put(it.sw, grid[y][x].sw)
                     cv.put(it.se, grid[y][x].se)
-                    grid[y][x].structure?.let { structure ->
-                        cv.put(it.structureType, structure.getTypeString())
-                        cv.put(it.drawable, structure.drawable)
+                    // Need to save null values to overwrite structures that have been deleted
+                    var structure: String? = null
+                    var drawable: Int? = null
+                    grid[y][x].structure?.let { struct ->
+                        structure = struct.getTypeString()
+                        drawable = struct.drawable
                     }
+                    cv.put(it.structureType, structure)
+                    cv.put(it.drawable, drawable)
                 }
                 grid[y][x].id = dbHelper.save(GameSchema.map, cv, grid[y][x].id)
             }

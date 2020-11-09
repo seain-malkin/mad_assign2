@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import com.i19097842.curtin.edu.au.mad_assignment2.R
+import com.i19097842.curtin.edu.au.mad_assignment2.dbase.GameSchema.Companion.game
 import com.i19097842.curtin.edu.au.mad_assignment2.models.Game
 
 // TODO: Rename parameter arguments, choose names that match
@@ -24,7 +25,9 @@ class ValuesFrag : Fragment() {
     private var param1: String? = null
     private var param2: String? = null
     private lateinit var moneyTv: TextView
+    private lateinit var moneyChangeTv: TextView
     private lateinit var popTv: TextView
+    private lateinit var emplRateTv: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,12 +43,20 @@ class ValuesFrag : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_values, container, false)
+        val v = Game.get.values
 
         // Find view elements
         moneyTv = view.findViewById(R.id.valuesMoney)
+        moneyChangeTv = view.findViewById(R.id.valuesMoneyChange)
+        popTv = view.findViewById(R.id.valuesPopulation)
+        emplRateTv = view.findViewById(R.id.valuesEmplRate)
 
         // Update view elements
-        moneyTv.setText(getString(R.string.values_money, Game.get.values.money))
+        moneyTv.setText(getString(R.string.values_money, v.money))
+        moneyChangeTv.setText(getString(R.string.values_money_change, "+", v.moneyChange))
+        popTv.setText(getString(R.string.values_population, v.population))
+        emplRateTv.setText(getString(R.string.values_empl_rate, (v.employmentRate * 100).toInt()))
+
 
         return view
     }

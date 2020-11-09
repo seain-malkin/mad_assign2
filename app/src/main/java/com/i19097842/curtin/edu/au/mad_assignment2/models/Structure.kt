@@ -20,13 +20,13 @@ open class Structure(val drawable: Int, var name: String) {
          * @return The structure object
          */
         @JvmStatic
-        fun factory(type: String, drawable: Int) : Structure {
+        fun factory(type: String, drawable: Int) : Structure? {
             return when(type) {
                 "Residential" -> Residential(drawable)
                 "Commercial" -> Commercial(drawable)
                 "Road" -> Road(drawable)
                 "Tree" -> Tree(drawable)
-                else -> Structure(drawable, "Basic")
+                else -> null
             }
         }
     }
