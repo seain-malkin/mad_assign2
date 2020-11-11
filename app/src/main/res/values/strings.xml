@@ -4,6 +4,7 @@
     <string name="author_id">19097842</string>
 
     <string name="settings_title">Settings</string>
+    <string name="settings_name">Town Name</string>
     <string name="settings_money">Initial Money</string>
     <string name="settings_map_width">Map Width</string>
     <string name="settings_map_height">Map Height</string>

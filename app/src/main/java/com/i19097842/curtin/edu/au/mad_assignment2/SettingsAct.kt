@@ -12,9 +12,11 @@ import android.widget.EditText
 /**
  * Argument keys for parsing data
  */
-private const val ARG_MONEY = "settings.money"
-private const val ARG_MAP_WIDTH = "settings.map_width"
-private const val ARG_MAP_HEIGHT = "settings.map_height"
+private const val PACKAGE = "com.i19097842.curtin.edu.au.mad_assignment2"
+private const val ARG_MONEY = "$PACKAGE.settings.money"
+private const val ARG_NAME = "$PACKAGE.settings.name"
+private const val ARG_MAP_WIDTH = "$PACKAGE.settings.map_width"
+private const val ARG_MAP_HEIGHT = "$PACKAGE.settings.map_height"
 
 /**
  * Settings Activity: Displays editable settings that can be changed prior to the game starting.
@@ -29,12 +31,14 @@ class SettingsAct : AppCompatActivity() {
 
         // Find view elements
         val moneyEt = findViewById<EditText>(R.id.settingsMoney)
+        val nameEt = findViewById<EditText>(R.id.settingsName)
         val mapWidthEt = findViewById<EditText>(R.id.settingsMapWidth)
         val mapHeightEt = findViewById<EditText>(R.id.settingsMapHeight)
         val cancelBtn = findViewById<Button>(R.id.settingsActionCancel)
         val saveBtn = findViewById<Button>(R.id.settingsActionSave)
 
         // Display current settings values. The default values here don't matter
+        nameEt.setText(intent.getStringExtra(ARG_NAME))
         moneyEt.setText(intent.getIntExtra(ARG_MONEY, 0).toString())
         mapWidthEt.setText(intent.getIntExtra(ARG_MAP_WIDTH, 0).toString())
         mapHeightEt.setText(intent.getIntExtra(ARG_MAP_HEIGHT, 0).toString())
@@ -44,6 +48,7 @@ class SettingsAct : AppCompatActivity() {
         saveBtn.setOnClickListener {
             // Save settings data in an intent
             val settings = Intent()
+            settings.putExtra(ARG_NAME, nameEt.text.toString())
             settings.putExtra(ARG_MONEY, moneyEt.text.toString().toInt())
             settings.putExtra(ARG_MAP_WIDTH, mapWidthEt.text.toString().toInt())
             settings.putExtra(ARG_MAP_HEIGHT, mapHeightEt.text.toString().toInt())
@@ -61,12 +66,19 @@ class SettingsAct : AppCompatActivity() {
         /**
          * Static method for creating an intent for [SettingsAct] activity
          * @param[context] The caller context
+         * @param[name] The town name
+         * @param[initialMoney] Amount of money to begin the game with
+         * @param[mapWidth] The width of the game map
+         * @param[mapHeight] The height of the game map
          * @return An intent object
          */
         @JvmStatic
-        fun getIntent(context: Context, initialMoney: Int, mapWidth: Int, mapHeight: Int) : Intent {
+        fun getIntent(
+            context: Context, name: String, initialMoney: Int, mapWidth: Int, mapHeight: Int
+        ) : Intent {
             // Create intent with initial arguments
             val intent = Intent(context, SettingsAct::class.java)
+            intent.putExtra(ARG_NAME, name)
             intent.putExtra(ARG_MONEY, initialMoney)
             intent.putExtra(ARG_MAP_WIDTH, mapWidth)
             intent.putExtra(ARG_MAP_HEIGHT, mapHeight)
@@ -83,6 +95,17 @@ class SettingsAct : AppCompatActivity() {
         @JvmStatic
         fun getInitialMoney(intent: Intent, default: Int) : Int {
             return intent.getIntExtra(ARG_MONEY, default)
+        }
+
+        /**
+         * Returns name from intent
+         * @param[intent] The activity intent
+         * @param[default] The default value
+         * @return The name setting
+         */
+        @JvmStatic
+        fun getName(intent: Intent, default: String): String {
+            return intent.getStringExtra(ARG_NAME) ?: default
         }
 
         /**

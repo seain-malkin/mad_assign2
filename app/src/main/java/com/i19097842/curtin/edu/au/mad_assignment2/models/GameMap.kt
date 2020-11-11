@@ -20,7 +20,7 @@ class GameMap(
     val dbHelper: GameDbHelper,
     val width: Int,
     val height: Int,
-    val gameId: Int? = null
+    val gameId: Int
 ) {
     val area = height * width
     val grid: Array<out Array<MapElement>>
@@ -28,63 +28,55 @@ class GameMap(
     init {
         // Attempt to retrieve map grid from database
         val table = GameSchema.map
-
-        if (gameId != null) {
-            dbHelper.db().query(
-                table.name,
-                arrayOf(
-                    table.cols.id,
-                    table.cols.gridIndex,
-                    table.cols.buildable,
-                    table.cols.nw,
-                    table.cols.ne,
-                    table.cols.sw,
-                    table.cols.se,
-                    table.cols.structureType,
-                    table.cols.drawable,
-                    table.cols.name
-                ),
-                "${table.cols.gameId} = ?",
-                arrayOf(gameId.toString()),
-                null, null,
-                "grid_index ASC"
-            ).run {
-                if (count > 0) {
-                    // Initialise the array and use the appropriate cursor based on coordinates
-                    grid = Array(height) { y ->
-                        Array<MapElement>(width) { x ->
-                            moveToNext()
-                            val element = MapElement(
-                                getInt(getColumnIndex(table.cols.buildable)) == 1,
-                                getInt(getColumnIndex(table.cols.nw)),
-                                getInt(getColumnIndex(table.cols.ne)),
-                                getInt(getColumnIndex(table.cols.sw)),
-                                getInt(getColumnIndex(table.cols.se)),
-                                null,
-                                getInt(getColumnIndex(table.cols.id))
+        dbHelper.db().query(
+            table.name,
+            arrayOf(
+                table.cols.id,
+                table.cols.gridIndex,
+                table.cols.buildable,
+                table.cols.nw,
+                table.cols.ne,
+                table.cols.sw,
+                table.cols.se,
+                table.cols.structureType,
+                table.cols.drawable,
+                table.cols.name
+            ),
+            "${table.cols.gameId} = ?",
+            arrayOf(gameId.toString()),
+            null, null,
+            "grid_index ASC"
+        ).run {
+            if (count > 0) {
+                // Initialise the array and use the appropriate cursor based on coordinates
+                grid = Array(height) { y ->
+                    Array<MapElement>(width) { x ->
+                        moveToNext()
+                        val element = MapElement(
+                            getInt(getColumnIndex(table.cols.buildable)) == 1,
+                            getInt(getColumnIndex(table.cols.nw)),
+                            getInt(getColumnIndex(table.cols.ne)),
+                            getInt(getColumnIndex(table.cols.sw)),
+                            getInt(getColumnIndex(table.cols.se)),
+                            null,
+                            getInt(getColumnIndex(table.cols.id))
+                        )
+                        // If structure stored in database create a structure object
+                        if (!isNull(getColumnIndex(table.cols.structureType))) {
+                            element.structure = Structure.factory(
+                                getString(getColumnIndex(table.cols.structureType)),
+                                getInt(getColumnIndex(table.cols.drawable)),
+                                getString(getColumnIndex(table.cols.name))
                             )
-
-                            // If structure stored in database create a structure object
-                            if (!isNull(getColumnIndex(table.cols.structureType))) {
-                                element.structure = Structure.factory(
-                                    getString(getColumnIndex(table.cols.structureType)),
-                                    getInt(getColumnIndex(table.cols.drawable)),
-                                    getString(getColumnIndex(table.cols.name))
-                                )
-                            }
-
-                            element
                         }
+                        element
                     }
-                } else {
-                    // It's possible a game is saved but the map wasn't initialised
-                    grid = MapData.generateGrid(height, width)
                 }
-
-                close()
+            } else {
+                grid = MapData.generateGrid(height, width)
+                save(gameId)
             }
-        } else {
-            grid = MapData.generateGrid(height, width)
+            close()
         }
     }
 
@@ -131,31 +123,59 @@ class GameMap(
         var gridIndex = 0
         for (y in 0..(height -1)) {
             for (x in 0..(width -1)) {
-                val cv = ContentValues()
-                GameSchema.map.cols.let {
-                    cv.put(it.gameId, gameId)
-                    cv.put(it.gridIndex, gridIndex++)
-                    cv.put(it.buildable, if (grid[y][x].buildable) 1 else 0) // convert boolean to int
-                    cv.put(it.nw, grid[y][x].nw)
-                    cv.put(it.ne, grid[y][x].ne)
-                    cv.put(it.sw, grid[y][x].sw)
-                    cv.put(it.se, grid[y][x].se)
-                    // Need to save null values to overwrite structures that have been deleted
-                    var structure: String? = null
-                    var drawable: Int? = null
-                    var name: String? = null
-                    grid[y][x].structure?.let { struct ->
-                        structure = struct.getTypeString()
-                        drawable = struct.drawable
-                        name = struct.name
-                    }
-                    cv.put(it.structureType, structure)
-                    cv.put(it.drawable, drawable)
-                    cv.put(it.name, name)
-                }
-                grid[y][x].id = dbHelper.save(GameSchema.map, cv, grid[y][x].id)
+                saveMapElement(gameId, grid[y][x], gridIndex++)
             }
         }
+    }
+
+    /**
+     * Creates a [ContentValues] object to insert into the database
+     * @param[element] The map element being saved
+     * @param[gameId] The current game id
+     * @param[gridIndex] The elements grid index. Only required on frist save
+     * @return The database ready [ContentValues] object
+     */
+    private fun getMapElementCV(
+        element: MapElement, gameId: Int, gridIndex: Int? = null
+    ): ContentValues {
+        val cv = ContentValues()
+        GameSchema.map.cols.let {
+            cv.put(it.gameId, gameId)
+            gridIndex?.let { gi -> cv.put(it.gridIndex, gi) }
+            cv.put(it.buildable, if (element.buildable) 1 else 0) // convert boolean to int
+            cv.put(it.nw, element.nw)
+            cv.put(it.ne, element.ne)
+            cv.put(it.sw, element.sw)
+            cv.put(it.se, element.se)
+            // Need to save null values to overwrite structures that have been deleted
+            var structure: String? = null
+            var drawable: Int? = null
+            var name: String? = null
+            element.structure?.let { struct ->
+                structure = struct.getTypeString()
+                drawable = struct.drawable
+                name = struct.name
+            }
+            cv.put(it.structureType, structure)
+            cv.put(it.drawable, drawable)
+            cv.put(it.name, name)
+        }
+
+        return cv
+    }
+
+    /**
+     * Saves an individual map element
+     * @param[gameId] The current game id
+     * @param[element] The map element to save
+     * @param[gridIndex] The elements global grid index. Only needed on first save
+     */
+    fun saveMapElement(gameId: Int, element: MapElement, gridIndex: Int? = null) {
+        element.id = dbHelper.save(
+            GameSchema.map,
+            getMapElementCV(element, gameId, gridIndex),
+            element.id
+        )
     }
 
     /**

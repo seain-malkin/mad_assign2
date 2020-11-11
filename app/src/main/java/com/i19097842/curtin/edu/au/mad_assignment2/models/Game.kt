@@ -37,10 +37,10 @@ class Game {
     }
 
     /** @property[Game.id] The database id for this game */
-    var id: Int? = null
+    private var id: Int = -1
 
-    /**  */
-    var title: String? = null
+    /** The name of the town */
+    var title: String = "Newtownsville"
 
     /** @property[Game.map] The map object */
     lateinit var map: GameMap
@@ -84,13 +84,16 @@ class Game {
                 moveToFirst()
                 id = getInt(getColumnIndex(table.cols.id))
                 title = getString(getColumnIndex(table.cols.title))
-                settings = Settings(dbHelper, id!!)
-                values = Values(dbHelper, id!!)
-                map = GameMap(dbHelper, settings.mapWidth, settings.mapHeight, id!!)
+                settings = Settings(dbHelper, id)
+                values = Values(dbHelper, id)
+                map = GameMap(dbHelper, settings.mapWidth, settings.mapHeight, id)
             } else {
                 // No previous game. Initialise a new game
                 settings = Settings(dbHelper)
                 values = Values(dbHelper)
+
+                // save newly initialised game to database
+                save()
             }
 
             close()
@@ -112,7 +115,7 @@ class Game {
         // Setup the map if not already
         if (!inProgress()) {
             values.addMoney(settings.initialMoney)
-            map = GameMap(dbHelper, settings.mapWidth, settings.mapHeight)
+            map = GameMap(dbHelper, settings.mapWidth, settings.mapHeight, id)
         }
     }
 
@@ -127,12 +130,16 @@ class Game {
         }
 
         // Save game data and get row id
-        id = dbHelper.save(GameSchema.game, cv, id)
+        id = dbHelper.save(GameSchema.game, cv, if (id == -1) null else id)
 
         // Save or update data associated the game
-        settings.save(id!!)
-        values.save(id!!)
-        map.save(id!!)
+        settings.save(id)
+        values.save(id)
+
+        // It's possible the map hasn't been created yet
+        if (inProgress()) {
+            map.save(id)
+        }
     }
 
     /**

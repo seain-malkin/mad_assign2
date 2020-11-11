@@ -53,9 +53,10 @@ class TitleAct : AppCompatActivity() {
             .setOnClickListener {
                 startActivityForResult(SettingsAct.getIntent(
                     this,
-                    Game.get.settings.initialMoney,
-                    Game.get.settings.mapWidth,
-                    Game.get.settings.mapHeight
+                    game.title,
+                    game.settings.initialMoney,
+                    game.settings.mapWidth,
+                    game.settings.mapHeight
                 ), LAUNCH_SETTINGS_ACTIVITY)
             }
     }
@@ -75,14 +76,6 @@ class TitleAct : AppCompatActivity() {
                     mapHeight = SettingsAct.getMapHeight(it, mapHeight)
                 }
             }
-        }
-    }
-
-    override fun onPause() {
-        super.onPause()
-
-        if (::game.isInitialized) {
-            game.save()
         }
     }
 }

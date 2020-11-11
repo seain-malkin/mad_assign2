@@ -89,14 +89,6 @@ class GameAct : MapFrag.MapListener, StructFrag.StructListener, MetaFrag.MetaLis
         }
     }
 
-    override fun onPause() {
-        super.onPause()
-
-        if (::game.isInitialized) {
-            game.save()
-        }
-    }
-
     /**
      * Begins the Details Activity
      * @param[structure] The structure the details explain
