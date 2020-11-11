@@ -6,9 +6,8 @@
     android:layout_height="match_parent"
     tools:context=".GameAct">
 
-    <fragment
+    <FrameLayout
         android:id="@+id/gameFrameValues"
-        android:name="com.i19097842.curtin.edu.au.mad_assignment2.fragments.ValuesFrag"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"

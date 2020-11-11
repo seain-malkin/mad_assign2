@@ -111,7 +111,7 @@ class Game {
     fun start() {
         // Setup the map if not already
         if (!inProgress()) {
-            values.adjustMoney(settings.initialMoney)
+            values.addMoney(settings.initialMoney)
             map = GameMap(dbHelper, settings.mapWidth, settings.mapHeight)
         }
     }
@@ -145,6 +145,8 @@ class Game {
 
         calculateGameValues()
 
+
+
         //TODO: Check for loss condition
         //TODO: Check for win condition
     }
@@ -157,13 +159,19 @@ class Game {
         values.population = values.nResidential * settings.familySize
 
         // Calculate: Employment Rate
-        values.employmentRate = min(1.0,
-            (values.nCommercial * settings.shopSize / values.population).toDouble())
+        if (values.population == 0) {
+            values.employmentRate = 1.0
+        } else {
+            values.employmentRate = min(
+                1.0,
+                (values.nCommercial * settings.shopSize / values.population.toDouble())
+            )
+        }
 
         // Calculate: Revenue
-        values.adjustMoney(values.population * (
+        values.adjustMoney((values.population * (
                 (values.employmentRate * settings.salary * settings.taxRate)
-                        - settings.serviceCost).toInt())
+                        - settings.serviceCost)).toInt())
     }
 
     /**
@@ -272,7 +280,20 @@ class Game {
             }
         }
 
+        if (placed) {
+            applyBuildingCosts(structure)
+        }
+
         return placed
+    }
+
+    private fun applyBuildingCosts(structure: Structure) {
+        when (structure) {
+            is Residential -> values.subtractMoney(settings.resiCost)
+            is Commercial -> values.subtractMoney(settings.commCost)
+            is Road -> values.subtractMoney(settings.roadCost)
+            is Tree -> values.subtractMoney(settings.treeCost)
+        }
     }
 
     /**

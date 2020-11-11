@@ -44,8 +44,4 @@
 
     </style>
 
-    <style name="bottomNavItem" parent="AppTheme">
-
-    </style>
-
 </resources>

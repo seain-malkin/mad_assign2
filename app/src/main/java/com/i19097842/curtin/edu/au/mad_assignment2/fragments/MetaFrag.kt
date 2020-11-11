@@ -43,6 +43,11 @@ class MetaFrag : Fragment() {
          * @param[mode] The new mode to apply
          */
         fun onEditModeChange(mode: Game.EditMode)
+
+        /**
+         * Triggered when the user presses the next tick button
+         */
+        fun onTickRequest()
     }
 
     /** Reference to context caller */
@@ -120,6 +125,11 @@ class MetaFrag : Fragment() {
         selStructCard?.setOnClickListener { updateEditMode(Game.EditMode.BUILD) }
         delStructCard?.setOnClickListener { updateEditMode(Game.EditMode.DELETE) }
         detStructCard?.setOnClickListener { updateEditMode(Game.EditMode.DETAILS) }
+
+        // Attach click event to next tick button
+        view.findViewById<CardView>(R.id.nextTickCV).setOnClickListener {
+            listener?.onTickRequest()
+        }
 
         return view
     }

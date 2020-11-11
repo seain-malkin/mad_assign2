@@ -58,6 +58,27 @@ class Values(val dbHelper: GameDbHelper) {
     }
 
     /**
+     * Subtracts an amount from the total money
+     * @param[amount] A positive amount to subtract
+     */
+    fun subtractMoney(amount: Int) {
+        // Don't subtract a negative amount
+        if (amount > 0) {
+            money -= amount
+        }
+    }
+
+    /**
+     * Add money to the total
+     * @param[amount] A positive amount to add
+     */
+    fun addMoney(amount: Int) {
+        if (amount > 0) {
+            money += amount
+        }
+    }
+
+    /**
      * Saves the object to persistent storage
      * @param[gameId] The database gameId
      */
@@ -75,7 +96,7 @@ class Values(val dbHelper: GameDbHelper) {
             cv.put(it.commercial, nCommercial)
         }
 
-        dbHelper.save(GameSchema.values, cv, id)
+        id = dbHelper.save(GameSchema.values, cv, id)
     }
 
     /**
@@ -86,7 +107,7 @@ class Values(val dbHelper: GameDbHelper) {
         val cols = GameSchema.values.cols
 
         // Retrieve row from persistent storage.
-        dbHelper.open(GameSchema.values, cols.id, gameId).run {
+        dbHelper.open(GameSchema.values, cols.gameId, gameId).run {
             // Point to first and only result and update object properties
             moveToFirst()
             id = getInt(getColumnIndex(cols.id))

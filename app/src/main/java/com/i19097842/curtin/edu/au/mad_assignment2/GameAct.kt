@@ -9,6 +9,7 @@ import android.util.Log
 import com.i19097842.curtin.edu.au.mad_assignment2.fragments.MapFrag
 import com.i19097842.curtin.edu.au.mad_assignment2.fragments.MetaFrag
 import com.i19097842.curtin.edu.au.mad_assignment2.fragments.StructFrag
+import com.i19097842.curtin.edu.au.mad_assignment2.fragments.ValuesFrag
 import com.i19097842.curtin.edu.au.mad_assignment2.models.Game
 import com.i19097842.curtin.edu.au.mad_assignment2.models.GameMap
 import com.i19097842.curtin.edu.au.mad_assignment2.models.Structure
@@ -26,6 +27,7 @@ class GameAct : MapFrag.MapListener, StructFrag.StructListener, MetaFrag.MetaLis
     private lateinit var game: Game
     private var mapFrag: MapFrag? = null
     private var metaFrag: MetaFrag? = null
+    private var valuesFrag: ValuesFrag? = null
     private var selectedStruct: Structure? = null
     private var editMode: Game.EditMode = Game.EditMode.BUILD
 
@@ -63,6 +65,9 @@ class GameAct : MapFrag.MapListener, StructFrag.StructListener, MetaFrag.MetaLis
                     }
                     metaFrag = MetaFrag.newInstance().also {
                         add(R.id.gameFrameMeta, it)
+                    }
+                    valuesFrag = ValuesFrag.newInstance().also {
+                        add(R.id.gameFrameValues, it)
                     }
                     commit()
                 }
@@ -127,7 +132,10 @@ class GameAct : MapFrag.MapListener, StructFrag.StructListener, MetaFrag.MetaLis
             Game.EditMode.DELETE -> Game.get.deleteStructure(position)
         }
 
-        if (updated) mapFrag?.adapter?.notifyItemChanged(position)
+        if (updated) {
+            mapFrag?.adapter?.notifyItemChanged(position)
+            valuesFrag?.update(money = game.values.money)
+        }
     }
 
     /**
@@ -145,5 +153,18 @@ class GameAct : MapFrag.MapListener, StructFrag.StructListener, MetaFrag.MetaLis
      */
     override fun onEditModeChange(mode: Game.EditMode) {
         editMode = mode
+    }
+
+    override fun onTickRequest() {
+        // Process game logic
+        game.tick()
+
+        // Update UI
+        valuesFrag?.update(
+            money = game.values.money,
+            moneyChange = game.values.moneyChange,
+            pop = game.values.population,
+            emplRate = game.values.employmentRate
+        )
     }
 }

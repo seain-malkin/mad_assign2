@@ -1,6 +1,7 @@
 package com.i19097842.curtin.edu.au.mad_assignment2.fragments
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -9,6 +10,7 @@ import android.widget.TextView
 import com.i19097842.curtin.edu.au.mad_assignment2.R
 import com.i19097842.curtin.edu.au.mad_assignment2.dbase.GameSchema.Companion.game
 import com.i19097842.curtin.edu.au.mad_assignment2.models.Game
+import kotlin.math.abs
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -52,13 +54,34 @@ class ValuesFrag : Fragment() {
         emplRateTv = view.findViewById(R.id.valuesEmplRate)
 
         // Update view elements
-        moneyTv.setText(getString(R.string.values_money, v.money))
-        moneyChangeTv.setText(getString(R.string.values_money_change, "+", v.moneyChange))
-        popTv.setText(getString(R.string.values_population, v.population))
-        emplRateTv.setText(getString(R.string.values_empl_rate, (v.employmentRate * 100).toInt()))
-
+        update(
+            money = v.money,
+            moneyChange = v.moneyChange,
+            pop = v.population,
+            emplRate = v.employmentRate)
 
         return view
+    }
+
+    /**
+     * Updates the UI elements
+     */
+    fun update(
+        money: Int? = null, moneyChange: Int? = null, pop: Int? = null, emplRate: Double? = null)
+    {
+        val v = Game.get.values
+        val sign: String = if (v.moneyChange < 0) "-" else "+"
+
+        // Only update values that have been set
+        money?.let{ moneyTv.setText(getString(R.string.values_money, it)) }
+        moneyChange?.let{
+            moneyChangeTv.setText(getString(R.string.values_money_change, sign, abs(it)))
+        }
+        pop?.let{ popTv.setText(getString(R.string.values_population, it)) }
+        emplRate?.let{
+            emplRateTv.setText(
+                getString(R.string.values_empl_rate, (v.employmentRate * 100).toInt()))
+        }
     }
 
     companion object {

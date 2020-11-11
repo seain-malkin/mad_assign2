@@ -61,6 +61,7 @@
     </LinearLayout>
 
     <androidx.cardview.widget.CardView
+        android:id="@+id/nextTickCV"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
@@ -74,6 +75,7 @@
             android:orientation="horizontal">
 
             <TextView
+                android:id="@+id/nextTickValue"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="45"

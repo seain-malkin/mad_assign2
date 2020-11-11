@@ -53,7 +53,7 @@ class Settings(val dbHelper: GameDbHelper) {
     var commCost = 500
 
     /** @property[roadCost] The cost to build a road structure */
-    var roadCost = 500
+    var roadCost = 20
 
     /** @property[treeCost] The cost to build a tree structure  */
     var treeCost = 10
@@ -81,7 +81,7 @@ class Settings(val dbHelper: GameDbHelper) {
             cv.put(it.treeCost, treeCost)
         }
 
-        dbHelper.save(GameSchema.settings, cv, id)
+        id = dbHelper.save(GameSchema.settings, cv, id)
     }
 
     /**
@@ -92,7 +92,7 @@ class Settings(val dbHelper: GameDbHelper) {
         val cols = GameSchema.settings.cols
 
         // Retrieve row from persistent storage.
-        dbHelper.open(GameSchema.settings, cols.id, gameId).run {
+        dbHelper.open(GameSchema.settings, cols.gameId, gameId).run {
             // Point to first and only result and update object properties
             moveToFirst()
             id = getInt(getColumnIndex(cols.id))
