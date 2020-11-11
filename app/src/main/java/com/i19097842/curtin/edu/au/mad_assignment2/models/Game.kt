@@ -261,8 +261,8 @@ class Game {
         val element = map.get(position)
         var placed = false
 
-        // If can build here and nothing yet built
-        if (element.buildable && element.structure == null) {
+        // If can afford to build, can build here and nothing yet built
+        if (canAffordStructure(structure) && element.buildable && element.structure == null) {
             // If building, ensure a road is adjacent
             if (structure is Building && adjacentToRoad(position)) {
                 element.structure = structure.clone()
@@ -278,13 +278,24 @@ class Game {
                 element.structure = structure.clone()
                 placed = true
             }
-        }
 
-        if (placed) {
-            applyBuildingCosts(structure)
+            // apply building costs
+            if (placed) {
+                applyBuildingCosts(structure)
+            }
         }
 
         return placed
+    }
+
+    private fun canAffordStructure(structure: Structure): Boolean {
+        return when(structure) {
+            is Residential -> values.money > settings.resiCost
+            is Commercial -> values.money > settings.commCost
+            is Road -> values.money > settings.roadCost
+            is Tree -> values.money > settings.treeCost
+            else -> true
+        }
     }
 
     private fun applyBuildingCosts(structure: Structure) {
