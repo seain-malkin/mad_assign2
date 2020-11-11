@@ -40,7 +40,7 @@
                 android:id="@+id/metaName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Brookville"
+                android:text="@string/meta_name"
                 android:layout_gravity="center"/>
 
         </androidx.cardview.widget.CardView>

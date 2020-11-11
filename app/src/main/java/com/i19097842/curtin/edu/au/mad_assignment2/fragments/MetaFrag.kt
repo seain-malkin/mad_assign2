@@ -108,6 +108,7 @@ class MetaFrag : Fragment() {
 
         // Find view elements
         val tickValue = view.findViewById<TextView>(R.id.nextTickValue)
+        val metaName = view.findViewById<TextView>(R.id.metaName)
         selStructImg = view.findViewById(R.id.selStructureImg)
         selStructCard = view.findViewById(R.id.selStructureCard)
         delStructImg = view.findViewById(R.id.delStructureImg)
@@ -125,6 +126,7 @@ class MetaFrag : Fragment() {
 
         // Set UI element values
         tickValue.setText(getString(R.string.meta_tick_value, Game.get.values.ticks))
+        metaName.setText(getString(R.string.meta_name, Game.get.title))
 
         // Attach user events to card elements
         selStructCard?.setOnClickListener { updateEditMode(Game.EditMode.BUILD) }
