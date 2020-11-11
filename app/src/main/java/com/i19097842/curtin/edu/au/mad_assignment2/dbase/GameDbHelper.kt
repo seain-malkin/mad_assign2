@@ -12,7 +12,7 @@ import java.lang.IllegalArgumentException
 
 
 private const val DATABASE_NAME = "mada2.db"
-private const val VERSION = 28
+private const val VERSION = 29
 
 /**
  * Handles Database interactions.
@@ -98,11 +98,10 @@ class GameDbHelper(context: Context)
      */
     private fun createGameTable(db: SQLiteDatabase) {
         val table = GameSchema.game
-        Log.i("GameDbHelper", "Creating database: ${table.name}.")
-        db.execSQL("CREATE TABLE " + table.name + "("
-                + table.cols.id + " INTEGER PRIMARY KEY, "
-                + table.cols.title + " TEXT, "
-                + table.cols.saveTime + " INTEGER NOT NULL)")
+        db.execSQL("CREATE TABLE ${table.name} (" +
+                "${table.cols.id} INTEGER PRIMARY KEY, " +
+                "${table.cols.title} TEXT, " +
+                "${table.cols.saveTime} INTEGER NOT NULL)")
     }
 
     /**
@@ -121,7 +120,8 @@ class GameDbHelper(context: Context)
                 "${table.cols.sw} INTEGER NOT NULL," +
                 "${table.cols.se} INTEGER NOT NULL, " +
                 "${table.cols.structureType} TEXT, " +
-                "${table.cols.drawable} INTEGER)")
+                "${table.cols.drawable} INTEGER, " +
+                "${table.cols.name} TEXT)")
     }
 
     /**

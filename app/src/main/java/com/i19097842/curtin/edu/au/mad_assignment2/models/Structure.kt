@@ -20,12 +20,12 @@ open class Structure(val drawable: Int, var name: String) {
          * @return The structure object
          */
         @JvmStatic
-        fun factory(type: String, drawable: Int) : Structure? {
+        fun factory(type: String, drawable: Int, name: String) : Structure? {
             return when(type) {
-                "Residential" -> Residential(drawable)
-                "Commercial" -> Commercial(drawable)
-                "Road" -> Road(drawable)
-                "Tree" -> Tree(drawable)
+                "Residential" -> Residential(drawable, name)
+                "Commercial" -> Commercial(drawable, name)
+                "Road" -> Road(drawable, name)
+                "Tree" -> Tree(drawable, name)
                 else -> null
             }
         }

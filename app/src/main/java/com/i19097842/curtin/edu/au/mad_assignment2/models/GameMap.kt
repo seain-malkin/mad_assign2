@@ -41,7 +41,8 @@ class GameMap(
                     table.cols.sw,
                     table.cols.se,
                     table.cols.structureType,
-                    table.cols.drawable
+                    table.cols.drawable,
+                    table.cols.name
                 ),
                 "${table.cols.gameId} = ?",
                 arrayOf(gameId.toString()),
@@ -67,7 +68,8 @@ class GameMap(
                             if (!isNull(getColumnIndex(table.cols.structureType))) {
                                 element.structure = Structure.factory(
                                     getString(getColumnIndex(table.cols.structureType)),
-                                    getInt(getColumnIndex(table.cols.drawable))
+                                    getInt(getColumnIndex(table.cols.drawable)),
+                                    getString(getColumnIndex(table.cols.name))
                                 )
                             }
 
@@ -141,12 +143,15 @@ class GameMap(
                     // Need to save null values to overwrite structures that have been deleted
                     var structure: String? = null
                     var drawable: Int? = null
+                    var name: String? = null
                     grid[y][x].structure?.let { struct ->
                         structure = struct.getTypeString()
                         drawable = struct.drawable
+                        name = struct.name
                     }
                     cv.put(it.structureType, structure)
                     cv.put(it.drawable, drawable)
+                    cv.put(it.name, name)
                 }
                 grid[y][x].id = dbHelper.save(GameSchema.map, cv, grid[y][x].id)
             }

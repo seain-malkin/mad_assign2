@@ -57,6 +57,7 @@ class GameSchema {
             val se = "se"
             val structureType = "structure_type"
             val drawable = "drawable"
+            val name = "name"
         }
     }
 
