@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.core.view.isVisible
 import com.i19097842.curtin.edu.au.mad_assignment2.R
@@ -106,6 +107,7 @@ class MetaFrag : Fragment() {
         val view = inflater.inflate(R.layout.fragment_meta, container, false)
 
         // Find view elements
+        val tickValue = view.findViewById<TextView>(R.id.nextTickValue)
         selStructImg = view.findViewById(R.id.selStructureImg)
         selStructCard = view.findViewById(R.id.selStructureCard)
         delStructImg = view.findViewById(R.id.delStructureImg)
@@ -121,6 +123,9 @@ class MetaFrag : Fragment() {
             modeImgSmall = it.height
         }
 
+        // Set UI element values
+        tickValue.setText(getString(R.string.meta_tick_value, Game.get.values.ticks))
+
         // Attach user events to card elements
         selStructCard?.setOnClickListener { updateEditMode(Game.EditMode.BUILD) }
         delStructCard?.setOnClickListener { updateEditMode(Game.EditMode.DELETE) }
@@ -129,6 +134,7 @@ class MetaFrag : Fragment() {
         // Attach click event to next tick button
         view.findViewById<CardView>(R.id.nextTickCV).setOnClickListener {
             listener?.onTickRequest()
+            tickValue.setText(getString(R.string.meta_tick_value, Game.get.values.ticks))
         }
 
         return view

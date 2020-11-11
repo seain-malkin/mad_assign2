@@ -78,7 +78,7 @@
                 android:id="@+id/nextTickValue"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="45"
+                android:text="@string/meta_tick_value"
                 android:textSize="18sp"
                 android:layout_gravity="center"
                 android:paddingStart="8dp"/>
