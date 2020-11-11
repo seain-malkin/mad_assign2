@@ -54,6 +54,8 @@ class Game {
 
     lateinit var dbHelper: GameDbHelper
 
+    val weather = Weather(ApiRepository())
+
     /**
      * Injects the context and loads data from the database
      * @param[context] The activity or application context

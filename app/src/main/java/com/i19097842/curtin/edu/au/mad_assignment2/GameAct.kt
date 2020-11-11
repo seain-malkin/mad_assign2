@@ -13,6 +13,8 @@ import com.i19097842.curtin.edu.au.mad_assignment2.fragments.ValuesFrag
 import com.i19097842.curtin.edu.au.mad_assignment2.models.Game
 import com.i19097842.curtin.edu.au.mad_assignment2.models.GameMap
 import com.i19097842.curtin.edu.au.mad_assignment2.models.Structure
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.launch
 
 private const val LAUNCH_DETAILS_ACTIVITY = 1
 
@@ -73,6 +75,8 @@ class GameAct : MapFrag.MapListener, StructFrag.StructListener, MetaFrag.MetaLis
                 }
             }
         }
+
+        game.weather.getTemperature()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
