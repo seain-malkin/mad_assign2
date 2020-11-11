@@ -23,13 +23,13 @@
             android:layout_height="wrap_content"
             android:text="@string/app_name"
             android:layout_marginBottom="16dp"
-            android:textAppearance="@style/TextAppearance.MaterialComponents.Headline3"/>
+            style="@style/titleH3"/>
 
         <TextView
             android:id="@+id/titleAuthorName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"/>
+            android:textAppearance="@style/titleH6"/>
 
     </LinearLayout>
 
