@@ -37,7 +37,8 @@ class Game {
     }
 
     /** @property[Game.id] The database id for this game */
-    private var id: Int = -1
+    var id: Int = -1
+        private set
 
     /** The name of the town */
     var title: String = "Newtownsville"
@@ -115,6 +116,7 @@ class Game {
         // Setup the map if not already
         if (!inProgress()) {
             values.addMoney(settings.initialMoney)
+            values.save(id)
             map = GameMap(dbHelper, settings.mapWidth, settings.mapHeight, id)
         }
     }
@@ -131,15 +133,6 @@ class Game {
 
         // Save game data and get row id
         id = dbHelper.save(GameSchema.game, cv, if (id == -1) null else id)
-
-        // Save or update data associated the game
-        settings.save(id)
-        values.save(id)
-
-        // It's possible the map hasn't been created yet
-        if (inProgress()) {
-            map.save(id)
-        }
     }
 
     /**
@@ -149,10 +142,8 @@ class Game {
     fun tick() {
         // Progress game time
         values.ticks++
-
         calculateGameValues()
-
-
+        values.save(id)
 
         //TODO: Check for loss condition
         //TODO: Check for win condition
@@ -199,9 +190,14 @@ class Game {
                 is Commercial -> values.nCommercial--
                 else -> {/** do nothing */}
             }
+            // Update values database
+            values.save(id)
             // Delete structure reference
             element.structure = null
         }
+
+        // Save changes to database
+        if (deleted) map.saveMapElement(id, element)
 
         return deleted
     }
@@ -286,9 +282,11 @@ class Game {
                 placed = true
             }
 
-            // apply building costs
+            // apply building costs and save to database
             if (placed) {
                 applyBuildingCosts(structure)
+                values.save(id)
+                map.saveMapElement(id, element)
             }
         }
 

@@ -70,11 +70,14 @@ class TitleAct : AppCompatActivity() {
         // Expecting settings activity result
         if (requestCode == LAUNCH_SETTINGS_ACTIVITY && resultCode == Activity.RESULT_OK) {
             data?.let {
-                Game.get.settings.run {
+                game.settings.run {
                     initialMoney = SettingsAct.getInitialMoney(it, initialMoney)
                     mapWidth = SettingsAct.getMapWidth(it, mapWidth)
                     mapHeight = SettingsAct.getMapHeight(it, mapHeight)
                 }
+                game.settings.save(game.id)
+                game.title = SettingsAct.getName(it, game.title)
+                game.save()
             }
         }
     }
