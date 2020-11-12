@@ -117,6 +117,8 @@ class Game {
         if (!inProgress()) {
             values.addMoney(settings.initialMoney)
             values.save(id)
+            settings.save(id)
+            save()
             map = GameMap(dbHelper, settings.mapWidth, settings.mapHeight, id)
         }
     }

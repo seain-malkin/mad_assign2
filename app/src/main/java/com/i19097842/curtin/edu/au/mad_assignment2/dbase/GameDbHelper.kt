@@ -12,7 +12,7 @@ import java.lang.IllegalArgumentException
 
 
 private const val DATABASE_NAME = "mada2.db"
-private const val VERSION = 39
+private const val VERSION = 43
 
 /**
  * Handles Database interactions.
