@@ -24,20 +24,20 @@ class StructureData private constructor() {
     )
 
     val roads: Array<Structure> = arrayOf(
-        Road(R.drawable.ic_road_n),
-        Road(R.drawable.ic_road_ne),
+        Road(R.drawable.ic_road_ew),
         Road(R.drawable.ic_road_ns),
         Road(R.drawable.ic_road_nw),
+        Road(R.drawable.ic_road_ne),
+        Road(R.drawable.ic_road_sw),
+        Road(R.drawable.ic_road_se),
         Road(R.drawable.ic_road_new),
+        Road(R.drawable.ic_road_sew),
         Road(R.drawable.ic_road_nse),
         Road(R.drawable.ic_road_nsw),
         Road(R.drawable.ic_road_nsew),
+        Road(R.drawable.ic_road_n),
         Road(R.drawable.ic_road_e),
-        Road(R.drawable.ic_road_ew),
         Road(R.drawable.ic_road_s),
-        Road(R.drawable.ic_road_se),
-        Road(R.drawable.ic_road_sw),
-        Road(R.drawable.ic_road_sew),
         Road(R.drawable.ic_road_w)
     )
 
