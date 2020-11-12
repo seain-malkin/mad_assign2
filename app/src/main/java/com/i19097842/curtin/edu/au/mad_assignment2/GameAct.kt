@@ -5,14 +5,11 @@ import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import com.i19097842.curtin.edu.au.mad_assignment2.fragments.MapFrag
 import com.i19097842.curtin.edu.au.mad_assignment2.fragments.MetaFrag
 import com.i19097842.curtin.edu.au.mad_assignment2.fragments.StructFrag
 import com.i19097842.curtin.edu.au.mad_assignment2.fragments.ValuesFrag
 import com.i19097842.curtin.edu.au.mad_assignment2.models.*
-import kotlinx.coroutines.MainScope
-import kotlinx.coroutines.launch
 
 private const val LAUNCH_DETAILS_ACTIVITY = 1
 
@@ -118,11 +115,9 @@ class GameAct :
      * @see [MapFrag.MapListener.onMapClick]
      */
     override fun onMapClick(element: GameMap.MapElement, position: Int) {
-        var updated = false
-
         // Perform appropriate function depending on the edit mode selected
         // Determine if map needs to be updated afterwards
-        updated = when (editMode) {
+        val updated = when (editMode) {
             Game.EditMode.BUILD -> selectedStruct != null && Game.get.putStructure(selectedStruct!!, position)
             Game.EditMode.DETAILS -> {
                 // Only launch if a structure exists

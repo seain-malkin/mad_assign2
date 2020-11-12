@@ -2,13 +2,13 @@ package com.i19097842.curtin.edu.au.mad_assignment2.models
 
 import android.content.ContentValues
 import android.content.Context
-import android.util.Log
 import com.i19097842.curtin.edu.au.mad_assignment2.dbase.GameDbHelper
 import com.i19097842.curtin.edu.au.mad_assignment2.dbase.GameSchema
-import java.lang.Exception
 import java.lang.RuntimeException
 import java.util.*
 import kotlin.math.min
+
+private const val TITLE_DEFAULT = "Newtownsville"
 
 /**
  * Represents the current game been played. Implemented as a Singleton as only one game can be
@@ -41,7 +41,7 @@ class Game {
         private set
 
     /** The name of the town */
-    var title: String = "Newtownsville"
+    var title: String = TITLE_DEFAULT
 
     /** @property[Game.map] The map object */
     lateinit var map: GameMap
@@ -88,13 +88,6 @@ class Game {
                 settings = Settings(dbHelper, id)
                 values = Values(dbHelper, id)
                 map = GameMap(dbHelper, settings.mapWidth, settings.mapHeight, id)
-            } else {
-                // No previous game. Initialise a new game
-                settings = Settings(dbHelper)
-                values = Values(dbHelper)
-
-                // save newly initialised game to database
-                save()
             }
 
             close()
@@ -110,17 +103,31 @@ class Game {
     }
 
     /**
-     * Ensures the map has been created.
+     * Starts a new game by re-initialising properties
+     * @param[newTitle] The title of the new game
+     * @param[newSettings] The new settings to apply
      */
-    fun start() {
-        // Setup the map if not already
-        if (!inProgress()) {
-            values.addMoney(settings.initialMoney)
-            values.save(id)
-            settings.save(id)
-            save()
-            map = GameMap(dbHelper, settings.mapWidth, settings.mapHeight, id)
-        }
+    fun newGame(newTitle: String, newSettings: Settings) {
+        // Reset game properties
+        title = newTitle
+
+        // Setting id to -1 tells the DB to insert a new row and fetch a new id
+        id = -1
+
+        // Commit changes to database and create new id
+        save()
+
+        // Create new settings and values properties and initialise them
+        settings = newSettings
+        values = Values(dbHelper)
+        values.addMoney(settings.initialMoney)
+
+        // save settings and values to database
+        values.save(id)
+        settings.save(id)
+
+        // initialise a new map based on settings
+        map = GameMap(dbHelper, settings.mapWidth, settings.mapHeight, id)
     }
 
     /**

@@ -5,7 +5,6 @@ import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.text.Editable
 import android.widget.Button
 import android.widget.EditText
 
@@ -17,6 +16,7 @@ private const val ARG_MONEY = "$PACKAGE.settings.money"
 private const val ARG_NAME = "$PACKAGE.settings.name"
 private const val ARG_MAP_WIDTH = "$PACKAGE.settings.map_width"
 private const val ARG_MAP_HEIGHT = "$PACKAGE.settings.map_height"
+private const val ARG_NEW_GAME = "$PACKAGE.settings.new_game"
 
 /**
  * Settings Activity: Displays editable settings that can be changed prior to the game starting.
@@ -43,6 +43,12 @@ class SettingsAct : AppCompatActivity() {
         mapWidthEt.setText(intent.getIntExtra(ARG_MAP_WIDTH, 0).toString())
         mapHeightEt.setText(intent.getIntExtra(ARG_MAP_HEIGHT, 0).toString())
 
+        // Disable certain inputs if not allowed to change once game started
+        if (!intent.getBooleanExtra(ARG_NEW_GAME, true)) {
+            moneyEt.isEnabled = false
+            mapWidthEt.isEnabled = false
+            mapHeightEt.isEnabled = false
+        }
 
         // User Click Event: Save settings
         saveBtn.setOnClickListener {
@@ -70,11 +76,17 @@ class SettingsAct : AppCompatActivity() {
          * @param[initialMoney] Amount of money to begin the game with
          * @param[mapWidth] The width of the game map
          * @param[mapHeight] The height of the game map
+         * @param[newGame] If false, some settings can't be modified
          * @return An intent object
          */
         @JvmStatic
         fun getIntent(
-            context: Context, name: String, initialMoney: Int, mapWidth: Int, mapHeight: Int
+            context: Context,
+            name: String,
+            initialMoney: Int,
+            mapWidth: Int,
+            mapHeight: Int,
+            newGame: Boolean = true
         ) : Intent {
             // Create intent with initial arguments
             val intent = Intent(context, SettingsAct::class.java)
@@ -82,6 +94,7 @@ class SettingsAct : AppCompatActivity() {
             intent.putExtra(ARG_MONEY, initialMoney)
             intent.putExtra(ARG_MAP_WIDTH, mapWidth)
             intent.putExtra(ARG_MAP_HEIGHT, mapHeight)
+            intent.putExtra(ARG_NEW_GAME, newGame)
 
             return intent
         }

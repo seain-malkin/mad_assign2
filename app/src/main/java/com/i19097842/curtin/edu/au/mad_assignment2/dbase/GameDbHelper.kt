@@ -5,14 +5,11 @@ import android.content.Context
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
-import android.util.Log
-import com.i19097842.curtin.edu.au.mad_assignment2.GameApp
 import com.i19097842.curtin.edu.au.mad_assignment2.dbase.GameSchema.Table
-import java.lang.IllegalArgumentException
 
 
 private const val DATABASE_NAME = "mada2.db"
-private const val VERSION = 43
+private const val VERSION = 44
 
 /**
  * Handles Database interactions.

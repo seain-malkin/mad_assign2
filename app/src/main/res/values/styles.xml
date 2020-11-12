@@ -15,6 +15,11 @@
         <item name="android:src">@android:color/transparent</item>
     </style>
 
+    <style name="titleButton" parent="Widget.MaterialComponents.Button">
+        <item name="drawableTint">@color/colorOnPrimaryDark</item>
+        <item name="android:drawablePadding">4dp</item>
+    </style>
+
     <style name="titleH3" parent="@style/TextAppearance.MaterialComponents.Headline3">
         <item name="android:textColor">@color/colorOnSurfaceDarker</item>
     </style>
