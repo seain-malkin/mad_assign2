@@ -18,6 +18,8 @@
 
     <string name="meta_tick_value">%1$d</string>
     <string name="meta_name">%1$s</string>
+    <string name="meta_temperature">%1$d°</string>
+    <string name="meta_temperature_null">\?°</string>
 
     <string name="details_title">Details</string>
     <string name="details_coord">row = %1$d, col = %2$d</string>

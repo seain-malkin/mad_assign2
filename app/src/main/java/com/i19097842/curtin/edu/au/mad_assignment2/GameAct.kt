@@ -10,9 +10,7 @@ import com.i19097842.curtin.edu.au.mad_assignment2.fragments.MapFrag
 import com.i19097842.curtin.edu.au.mad_assignment2.fragments.MetaFrag
 import com.i19097842.curtin.edu.au.mad_assignment2.fragments.StructFrag
 import com.i19097842.curtin.edu.au.mad_assignment2.fragments.ValuesFrag
-import com.i19097842.curtin.edu.au.mad_assignment2.models.Game
-import com.i19097842.curtin.edu.au.mad_assignment2.models.GameMap
-import com.i19097842.curtin.edu.au.mad_assignment2.models.Structure
+import com.i19097842.curtin.edu.au.mad_assignment2.models.*
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 
@@ -23,10 +21,15 @@ private const val LAUNCH_DETAILS_ACTIVITY = 1
  *
  * @author Seain Malkin (19097842@student.curtin.edu.au)
  */
-class GameAct : MapFrag.MapListener, StructFrag.StructListener, MetaFrag.MetaListener,
+class GameAct :
+    MapFrag.MapListener,
+    StructFrag.StructListener,
+    MetaFrag.MetaListener,
+    Weather.WeatherListener,
     AppCompatActivity() {
 
     private lateinit var game: Game
+    private lateinit var weather: Weather
     private var mapFrag: MapFrag? = null
     private var metaFrag: MetaFrag? = null
     private var valuesFrag: ValuesFrag? = null
@@ -76,7 +79,9 @@ class GameAct : MapFrag.MapListener, StructFrag.StructListener, MetaFrag.MetaLis
             }
         }
 
-        game.weather.getTemperature()
+        // Initialise the weather object and update the temperature
+        weather = Weather(this, ApiRepository())
+        weather.updateTemperature()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -154,6 +159,7 @@ class GameAct : MapFrag.MapListener, StructFrag.StructListener, MetaFrag.MetaLis
     override fun onTickRequest() {
         // Process game logic
         game.tick()
+        weather.updateTemperature()
 
         // Update UI
         valuesFrag?.update(
@@ -162,5 +168,9 @@ class GameAct : MapFrag.MapListener, StructFrag.StructListener, MetaFrag.MetaLis
             pop = game.values.population,
             emplRate = game.values.employmentRate
         )
+    }
+
+    override fun onTemperatureChange(temperature: Int) {
+        metaFrag?.updateTemperature(temperature)
     }
 }

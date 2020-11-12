@@ -61,7 +61,7 @@ class MetaFrag : Fragment() {
     private var delStructCard: CardView? = null
     private var detStructImg: ImageView? = null
     private var detStructCard: CardView? = null
-    private var modeLayout: LinearLayout? = null
+    private var tempTv: TextView? = null
 
     /**
      * The dimensions of the mode change buttons. Calculated at runtime.
@@ -115,6 +115,7 @@ class MetaFrag : Fragment() {
         delStructCard = view.findViewById(R.id.delStructureCard)
         detStructImg = view.findViewById(R.id.detStructureImg)
         detStructCard = view.findViewById(R.id.detStructureCard)
+        tempTv = view.findViewById(R.id.metaTemperature)
 
         // Get the mode image sizes
         selStructImg?.layoutParams?.let {
@@ -197,6 +198,14 @@ class MetaFrag : Fragment() {
         if (editMode != Game.EditMode.BUILD) {
             updateEditMode(Game.EditMode.BUILD)
         }
+    }
+
+    /**
+     * Updates the temperature UI element
+     * @param[temperature] The temperature to display
+     */
+    fun updateTemperature(temperature: Int) {
+        tempTv?.setText(getString(R.string.meta_temperature, temperature))
     }
 
     /**

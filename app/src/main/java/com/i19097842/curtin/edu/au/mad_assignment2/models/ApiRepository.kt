@@ -1,11 +1,9 @@
 package com.i19097842.curtin.edu.au.mad_assignment2.models
 
 import android.net.Uri
-import android.util.Log
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.json.JSONObject
-import java.lang.RuntimeException
 import java.net.URL
 
 private const val OPEN_WEATHER_API_KEY = "aa7e3507e21f96994c769f929761529e"
