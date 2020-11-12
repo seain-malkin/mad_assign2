@@ -1,12 +1,9 @@
 package com.i19097842.curtin.edu.au.mad_assignment2.models
 
 import android.content.ContentValues
-import android.util.Log
 import com.i19097842.curtin.edu.au.mad_assignment2.dbase.GameDbHelper
 import com.i19097842.curtin.edu.au.mad_assignment2.dbase.GameSchema
 import com.i19097842.curtin.edu.au.mad_assignment2.lib.MapData
-import java.lang.IllegalArgumentException
-import java.lang.IllegalStateException
 
 /**
  * Represents the map that the user can build structures upon
