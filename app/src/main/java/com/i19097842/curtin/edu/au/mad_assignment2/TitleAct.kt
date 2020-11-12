@@ -21,7 +21,9 @@ private const val LAUNCH_SETTINGS_ACTIVITY_NEW = 2
  * @author Seain Malkin (19097842@student.curtin.edu.au)
  */
 class TitleAct : AppCompatActivity() {
-    lateinit var game: Game
+    private lateinit var game: Game
+    private lateinit var settingsBtn: Button
+    private lateinit var resumeBtn: Button
     /**
      * Initialises activity elements and state.
      * @see AppCompatActivity.onCreate]
@@ -45,14 +47,13 @@ class TitleAct : AppCompatActivity() {
         // Set up button events and decide which buttons are visible
 
         // Resume game button
-        val resumeBtn = findViewById<Button>(R.id.titleActionResume)
+        resumeBtn = findViewById(R.id.titleActionResume)
+        // On click: Launch game
+        resumeBtn.setOnClickListener { startActivity(GameAct.getIntent(this)) }
 
         if (game.inProgress()) {
             // Show button as game in progress
             resumeBtn.visibility = View.VISIBLE
-
-            // On click: Launch game
-            resumeBtn.setOnClickListener { startActivity(GameAct.getIntent(this)) }
         } else {
             // Hide button as no game created yet
             resumeBtn.visibility = View.GONE
@@ -77,22 +78,35 @@ class TitleAct : AppCompatActivity() {
 
         // Settings button
         // Only visible if a game is in progress. Otherwise the new game button will launch settings
-        val settingsBtn = findViewById<Button>(R.id.titleActionSettings)
+        settingsBtn = findViewById(R.id.titleActionSettings)
 
         if (game.inProgress()) {
             settingsBtn.visibility = View.VISIBLE
-            settingsBtn.setOnClickListener {
-                startActivityForResult(
-                    SettingsAct.getIntent(
-                        this,
-                        game.title,
-                        game.settings.initialMoney,
-                        game.settings.mapWidth,
-                        game.settings.mapHeight,
-                        false
-                    ), LAUNCH_SETTINGS_ACTIVITY_RESUME
-                )
-            }
+        }
+
+        settingsBtn.setOnClickListener {
+            startActivityForResult(
+                SettingsAct.getIntent(
+                    this,
+                    game.title,
+                    game.settings.initialMoney,
+                    game.settings.mapWidth,
+                    game.settings.mapHeight,
+                    false
+                ), LAUNCH_SETTINGS_ACTIVITY_RESUME
+            )
+        }
+    }
+
+    /**
+     * Displays the resume and settings buttons
+     */
+    private fun updateUI() {
+        if (resumeBtn.visibility != View.VISIBLE) {
+            resumeBtn.visibility = View.VISIBLE
+        }
+        if (settingsBtn.visibility != View.VISIBLE) {
+            settingsBtn.visibility = View.VISIBLE
         }
     }
 
@@ -119,6 +133,8 @@ class TitleAct : AppCompatActivity() {
                     mapWidth = SettingsAct.getMapWidth(it, mapWidth)
                     mapHeight = SettingsAct.getMapHeight(it, mapHeight)
                 }
+                // Update UI so the appropriate buttons are displayed
+                updateUI()
 
                 // Set the title of the new game
                 game.title = SettingsAct.getName(it, game.title)

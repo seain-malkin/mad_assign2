@@ -16,8 +16,7 @@
     </style>
 
     <style name="titleButton" parent="Widget.MaterialComponents.Button">
-        <item name="drawableTint">@color/colorOnPrimaryDark</item>
-        <item name="android:drawablePadding">4dp</item>
+
     </style>
 
     <style name="titleH3" parent="@style/TextAppearance.MaterialComponents.Headline3">

@@ -9,7 +9,7 @@ import com.i19097842.curtin.edu.au.mad_assignment2.dbase.GameSchema.Table
 
 
 private const val DATABASE_NAME = "mada2.db"
-private const val VERSION = 44
+private const val VERSION = 46
 
 /**
  * Handles Database interactions.
