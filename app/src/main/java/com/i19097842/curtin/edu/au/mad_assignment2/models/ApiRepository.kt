@@ -6,7 +6,7 @@ import kotlinx.coroutines.withContext
 import org.json.JSONObject
 import java.net.URL
 
-private const val OPEN_WEATHER_API_KEY = "aa7e3507e21f96994c769f929761529e"
+private const val OPEN_WEATHER_API_KEY = "{removed}"
 private const val OPEN_WEATHER_API = "https://api.openweathermap.org/data/2.5/weather"
 
 /**
